@@ -1,0 +1,9 @@
+# Backend dependencies — pinned in Phase 2 when the spine is built.
+# Planned:
+#   fastapi
+#   uvicorn[standard]
+#   anthropic
+#   apscheduler
+#   httpx
+#   feedparser        # RSS / arXiv
+#   pydantic
