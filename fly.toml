@@ -1,0 +1,50 @@
+# Fly.io config for the singularity backend — one small always-on machine running the
+# API *and* the in-process daily-wake scheduler. Rename `app` before first deploy.
+#
+# Build context is the backend/ directory (that's where the Dockerfile + .dockerignore
+# live). Deploy from the repo root with:
+#
+#     fly deploy ./backend --config fly.toml
+#
+# so Fly uses backend/ as the context and backend/Dockerfile as the image.
+
+app = "singularity-narrator"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"   # resolved inside the ./backend build context
+
+[env]
+  PORT = "8000"
+  SINGULARITY_DATA = "/data"
+  SINGULARITY_DB = "/data/singularity.db"
+  # Autonomy on: this machine wakes the narrator once a day in-process.
+  SINGULARITY_ENABLE_SCHEDULER = "true"
+  SINGULARITY_WAKE_HOUR = "9"
+  SINGULARITY_TZ = "UTC"
+  # Secrets (ANTHROPIC_API_KEY, SINGULARITY_ADMIN_TOKEN) are NOT set here —
+  # set them with `fly secrets set ...`.
+
+# Persistent volume for the SQLite DB (WAL). Create once:
+#   fly volumes create singularity_data --size 1 --region iad
+[mounts]
+  source = "singularity_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  # Keep the single machine alive so the scheduler can fire — do NOT auto-stop to zero.
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [http_service.http_check]
+    path = "/api/status"
+    interval = "30s"
+    timeout = "5s"
+
+# One small always-on machine. A single machine avoids double-firing the daily wake.
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

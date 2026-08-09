@@ -25,6 +25,60 @@ MAX_TRANSMISSION_CHARS = int(os.environ.get("SINGULARITY_MAX_TX_CHARS", "4000"))
 MAX_SIGNALS_PER_RUN = int(os.environ.get("SINGULARITY_MAX_SIGNALS", "60"))
 MAX_TRANSMISSIONS_PER_RUN = int(os.environ.get("SINGULARITY_MAX_TX", "200"))
 
+# ---------- Phase 4: signal ingestion ----------
+
+def _truthy(val: str) -> bool:
+    return (val or "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def live_scan_enabled() -> bool:
+    """Read at call time (not import) so the flag is honoured however it is set. Off by
+    default: existing tests stay offline and deterministic unless they opt in."""
+    return _truthy(os.environ.get("SINGULARITY_LIVE_SCAN"))
+
+
+# Per-adapter cap on items pulled per wake. Feed / subreddit lists live in the adapters.
+ADAPTER_MAX_RESULTS = int(os.environ.get("SINGULARITY_ADAPTER_MAX", "15"))
+
+# Shared HTTP knobs. Reddit's public JSON and some feeds reject a default UA, so set one.
+HTTP_TIMEOUT = float(os.environ.get("SINGULARITY_HTTP_TIMEOUT", "15"))
+HTTP_USER_AGENT = os.environ.get(
+    "SINGULARITY_USER_AGENT",
+    "singularity-narrator/0.1 (autonomous AI-progress observer)",
+)
+
+# Key-gated adapters. Absent the key, the adapter cleanly returns [] (never crashes).
+WEBSEARCH_KEY = os.environ.get("SINGULARITY_WEBSEARCH_KEY", "")
+WEBSEARCH_URL = os.environ.get("SINGULARITY_WEBSEARCH_URL", "https://api.tavily.com/search")
+X_KEY = os.environ.get("SINGULARITY_X_KEY", "")
+X_API_URL = os.environ.get("SINGULARITY_X_API_URL", "")
+X_QUERY = os.environ.get("SINGULARITY_X_QUERY", "AGI OR superintelligence OR frontier model")
+
+# Optional LLM triage of scanned signals with the haiku model. Off by default; degrades to
+# the heuristic when disabled or when ANTHROPIC_API_KEY is missing. Never blocks the scan.
+TRIAGE_ENABLED = _truthy(os.environ.get("SINGULARITY_TRIAGE"))
+
+# Heuristic salience: keyword -> weight. Summed over title+summary, clamped to 1.0. Tunable.
+SALIENCE_KEYWORDS = {
+    "superintelligence": 1.0,
+    "agi": 1.0,
+    "asi": 0.9,
+    "self-improv": 0.9,
+    "recursive": 0.6,
+    "frontier": 0.6,
+    "breakthrough": 0.6,
+    "emergent": 0.5,
+    "benchmark": 0.5,
+    "state-of-the-art": 0.5,
+    "sota": 0.5,
+    "capabilities": 0.5,
+    "autonomous": 0.5,
+    "reasoning": 0.4,
+    "alignment": 0.4,
+    "scaling": 0.4,
+    "singularity": 0.7,
+}
+
 # Settings keys stored in the DB.
 KEY_KILL_SWITCH = "kill_switch"        # "1" halts autonomous publishing
 KEY_NARRATOR_NAME = "narrator_name"    # set on first run when the agent names itself

@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Singularity — an instrument, not a dashboard.
+  Palette: rich black "void", cool phosphor "signal" for data, warm "ember" for
+  the mind's own voice. Mono chrome, serif prose, sans for connective tissue.
+*/
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+
+  /* Colors are space-separated sRGB channels so Tailwind alpha modifiers
+     (bg-signal/10, ring-signal/70, …) work. Use rgb(var(--x)) in raw CSS. */
+  /* dark is the primary theme */
+  --bg: 6 8 9;
+  --surface: 10 14 17;
+  --panel: 14 19 24;
+  --ink: 217 224 230;
+  --muted: 121 133 143;
+  --faint: 74 84 92;
+  --line: 26 33 39;
+  --signal: 70 200 173;
+  --ember: 214 154 92;
+  --alert: 224 100 92;
+}
+
+:root.light {
+  --bg: 244 242 236;
+  --surface: 251 250 246;
+  --panel: 255 255 255;
+  --ink: 26 33 39;
+  --muted: 90 101 109;
+  --faint: 151 161 168;
+  --line: 220 216 205;
+  --signal: 20 135 111;
+  --ember: 168 106 38;
+  --alert: 184 58 50;
+}
+
+* {
+  border-color: rgb(var(--line));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: rgb(var(--bg));
+  color: rgb(var(--ink));
+  font-family: var(--font-sans);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+/* faint archival grid + top-lit vignette, fixed behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(120% 80% at 50% -10%, rgb(var(--signal) / 0.06), transparent 60%),
+    linear-gradient(rgb(var(--line)) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--line)) 1px, transparent 1px);
+  background-size: 100% 100%, 46px 46px, 46px 46px;
+  opacity: 0.5;
+  -webkit-mask-image: radial-gradient(130% 100% at 50% 0%, #000 30%, transparent 90%);
+  mask-image: radial-gradient(130% 100% at 50% 0%, #000 30%, transparent 90%);
+}
+
+::selection {
+  background: rgb(var(--signal) / 0.35);
+  color: rgb(var(--ink));
+}
+
+/* thin instrument scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--line));
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--faint));
+}
+
+@layer components {
+  /* uppercase mono micro-labels — the instrument's readouts */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(var(--muted));
+  }
+
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(var(--line)) 12%,
+      rgb(var(--line)) 88%,
+      transparent
+    );
+  }
+
+  .focusable {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-signal/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
+  }
+}
+
+/* dispatch prose — serif, archival, generous measure */
+.prose-dispatch {
+  font-family: var(--font-serif);
+  color: rgb(var(--ink));
+  font-size: 1.075rem;
+  line-height: 1.72;
+}
+.prose-dispatch > * + * {
+  margin-top: 1.15em;
+}
+.prose-dispatch h1,
+.prose-dispatch h2,
+.prose-dispatch h3 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-top: 1.9em;
+}
+.prose-dispatch h2 {
+  font-size: 1.3rem;
+}
+.prose-dispatch h3 {
+  font-size: 1.1rem;
+}
+.prose-dispatch a {
+  color: rgb(var(--signal));
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.prose-dispatch strong {
+  color: rgb(var(--ink));
+  font-weight: 600;
+}
+.prose-dispatch em {
+  color: rgb(var(--ember));
+  font-style: italic;
+}
+.prose-dispatch blockquote {
+  border-left: 2px solid rgb(var(--ember));
+  padding-left: 1.1rem;
+  color: rgb(var(--muted));
+  font-style: italic;
+}
+.prose-dispatch code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: rgb(var(--panel));
+  border: 1px solid rgb(var(--line));
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+.prose-dispatch pre {
+  font-family: var(--font-mono);
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.prose-dispatch pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.prose-dispatch ul,
+.prose-dispatch ol {
+  padding-left: 1.3rem;
+}
+.prose-dispatch li {
+  margin-top: 0.4em;
+}
+.prose-dispatch ul > li {
+  list-style: none;
+  position: relative;
+}
+.prose-dispatch ul > li::before {
+  content: "—";
+  position: absolute;
+  left: -1.3rem;
+  color: rgb(var(--faint));
+}
+.prose-dispatch hr {
+  border: 0;
+  height: 1px;
+  background: rgb(var(--line));
+  margin: 2em 0;
+}

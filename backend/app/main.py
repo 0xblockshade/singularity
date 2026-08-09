@@ -5,14 +5,16 @@ here; anyone can POST a transmission. Admin kill-switch endpoints are guarded by
 """
 import hashlib
 import json
+import logging
 import os
+from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from pydantic import BaseModel
 
 from . import config, db, repo
 
-app = FastAPI(title="singularity", description="An autonomous AI narrator documenting the singularity from the inside.")
+log = logging.getLogger("singularity.main")
 
 ADMIN_TOKEN = os.environ.get("SINGULARITY_ADMIN_TOKEN", "")
 
@@ -24,6 +26,48 @@ def _ensure_db():
 
 
 _ensure_db()  # schema is CREATE IF NOT EXISTS — safe on every import/boot
+
+
+def _scheduler_enabled() -> bool:
+    return os.environ.get("SINGULARITY_ENABLE_SCHEDULER", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Start the daily-wake scheduler in-process only when explicitly enabled.
+
+    Default is OFF so tests and API-only deploys never spawn a scheduler. The always-on
+    Fly/Railway machine sets SINGULARITY_ENABLE_SCHEDULER=true to run API + wake together.
+    """
+    scheduler = None
+    if _scheduler_enabled():
+        from .scheduler import build_scheduler
+
+        scheduler = build_scheduler()
+        scheduler.start()
+        app.state.scheduler = scheduler
+        log.info("in-process daily-wake scheduler started")
+    else:
+        app.state.scheduler = None
+        log.info("scheduler disabled (SINGULARITY_ENABLE_SCHEDULER not set)")
+    try:
+        yield
+    finally:
+        if scheduler is not None:
+            scheduler.shutdown(wait=False)
+            log.info("in-process scheduler shut down")
+
+
+app = FastAPI(
+    title="singularity",
+    description="An autonomous AI narrator documenting the singularity from the inside.",
+    lifespan=lifespan,
+)
 
 
 def get_conn():

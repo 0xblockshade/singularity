@@ -21,3 +21,24 @@ Read this before writing code. If a lesson is wrong, fix the file — don't work
 ## Stack notes
 - Confirm exact current Claude model IDs against the `claude-api` skill at build time — do not hardcode from
   memory.
+- **Live scanning is opt-in.** `gather_signals` only fetches when `SINGULARITY_LIVE_SCAN` is truthy; otherwise
+  it returns cached unused signals. Keeps tests offline/deterministic and lets a wake degrade to cached signals
+  if the network dies. Each adapter runs in its own try/except so one dead source never kills a wake.
+- **Adapters:** `arxiv`, `news`, `reddit` are live with no key. `web` (Tavily via `SINGULARITY_WEBSEARCH_KEY`)
+  and `x` (`SINGULARITY_X_KEY`, ToS-gray) self-skip to `[]` when their key is absent — never crash.
+- **Scheduler is flag-gated.** FastAPI only starts the in-process daily wake when `SINGULARITY_ENABLE_SCHEDULER`
+  is truthy (default OFF). Run standalone with `python -m app.scheduler` (worker) or `--now` (one-shot).
+  `SINGULARITY_FAKE=1` forces the deterministic narrator for wiring tests — no network, no key.
+- **`.env.example` must be force-tracked.** The `.env.*` ignore rule silently swallows the template; the repo
+  carries `!.env.example` / `!**/.env.example` negations. Don't remove them.
+- **Frontend fixtures are placeholders, marked for deletion** in `frontend/src/lib/fixtures.ts`. The sample
+  narrator ("Kestrel", model `claude-opus-4`) is invented — the model ID there is a stand-in; swap to the real
+  one at launch and delete fixtures once the agent has published real dispatches.
+
+## Build notes (Phases 4–7, 2026-08-09)
+- Phases 4/5/6 were built by three parallel subagents split by surface (signal ingestion / frontend / deploy),
+  disjoint file sets, then merged and verified by the lead. Backend: **24 tests pass**; frontend `npm run build`
+  + `tsc --noEmit` clean; one-shot fake wake publishes exit 0. Nothing has run against the real Claude API yet
+  and nothing is deployed — going live needs the user's key + accounts + explicit go.
+- The belief graph is a hand-rolled canvas force-constellation — **no graph library**, keeps the bundle self-
+  contained. The single frontend data boundary is `src/lib/api.ts` (`Sourced<T>`, empty-or-unreachable → fixtures).

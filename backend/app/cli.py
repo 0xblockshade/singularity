@@ -13,6 +13,7 @@ import json
 from . import config, db, repo
 from .agent import client as narrator_client
 from .agent import ritual
+from .agent import scanning
 
 
 def main():
@@ -29,6 +30,8 @@ def main():
 
     p_run = sub.add_parser("run")
     p_run.add_argument("--fake", action="store_true", help="use the deterministic narrator")
+
+    sub.add_parser("scan")
 
     args = ap.parse_args()
     conn = db.connect()
@@ -49,6 +52,13 @@ def main():
             narrator = narrator_client.AnthropicNarrator()
             result = ritual.run_ritual(conn, narrator)
         print(json.dumps(result, indent=2))
+
+    elif args.cmd == "scan":
+        counts = scanning.scan(conn)
+        total = sum(counts.values())
+        for name, n in counts.items():
+            print(f"{name:>8}: {n} recorded")
+        print(f"{'total':>8}: {total} recorded")
 
     conn.close()
 
