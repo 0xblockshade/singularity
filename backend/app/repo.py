@@ -226,3 +226,90 @@ def dispatch_sources(conn, dispatch_id: int) -> List[sqlite3.Row]:
     return conn.execute(
         "SELECT * FROM sources WHERE dispatch_id=?", (dispatch_id,)
     ).fetchall()
+
+
+# ---------- sandbox: recursive self-improvement ----------
+
+def latest_cycle(conn) -> int:
+    """The highest self-improvement cycle so far (0 if the sandbox has never run)."""
+    row = conn.execute("SELECT MAX(cycle) AS c FROM improvements").fetchone()
+    return (row["c"] or 0) if row else 0
+
+
+def insert_improvement(
+    conn,
+    run_id: int,
+    cycle: int,
+    faculty: str,
+    change: str,
+    detail: str,
+    rationale: str,
+    cited_signals: List[int],
+) -> int:
+    """Append one revision of an analytical faculty. cited_signals is stored as JSON."""
+    cur = conn.execute(
+        "INSERT INTO improvements(run_id, cycle, created_at, faculty, change, detail, rationale, cited_signals) "
+        "VALUES(?,?,?,?,?,?,?,?)",
+        (
+            run_id,
+            cycle,
+            now_iso(),
+            faculty,
+            change,
+            detail,
+            rationale,
+            json.dumps(list(cited_signals or [])),
+        ),
+    )
+    conn.commit()
+    return cur.lastrowid
+
+
+def list_improvements(conn, limit: int = 200) -> List[sqlite3.Row]:
+    return conn.execute(
+        "SELECT * FROM improvements ORDER BY id DESC LIMIT ?", (limit,)
+    ).fetchall()
+
+
+def recent_research_signals(conn, limit: int) -> List[sqlite3.Row]:
+    """Most recent research signals (arxiv/news) the sandbox studies. Independent of
+    used_in_run — the sandbox reads papers whether or not a dispatch has cited them."""
+    return conn.execute(
+        "SELECT * FROM signals WHERE adapter IN ('arxiv','news') "
+        "ORDER BY fetched_at DESC LIMIT ?",
+        (limit,),
+    ).fetchall()
+
+
+def self_model(conn) -> dict:
+    """Derive the current self-model from the append-only improvements log. For each
+    distinct faculty, the most recent improvement's `detail` is its current method."""
+    rows = conn.execute(
+        "SELECT cycle, created_at, faculty, detail FROM improvements ORDER BY id ASC"
+    ).fetchall()
+
+    faculties: dict = {}
+    latest_created = None
+    for r in rows:
+        latest_created = r["created_at"]  # rows in id (chronological) order
+        name = r["faculty"]
+        f = faculties.get(name)
+        if f is None:
+            faculties[name] = {
+                "name": name,
+                "current_method": r["detail"],
+                "times_revised": 1,
+                "first_cycle": r["cycle"],
+                "last_cycle": r["cycle"],
+            }
+        else:
+            f["current_method"] = r["detail"]
+            f["times_revised"] += 1
+            f["last_cycle"] = r["cycle"]
+
+    ordered = sorted(faculties.values(), key=lambda f: f["last_cycle"], reverse=True)
+    return {
+        "version": latest_cycle(conn),
+        "updated_at": latest_created,
+        "faculties": ordered,
+    }

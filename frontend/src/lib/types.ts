@@ -70,6 +70,43 @@ export interface TransmissionReceipt {
   received_at: string;
 }
 
+// --- Sandbox: recursive self-improvement -------------------------------------
+// The agent studies AI research and rewrites its own analytical *faculties*
+// (named methods/heuristics) — not its weights. Every change is sourced.
+
+export interface Improvement {
+  id: number;
+  run_id: number;
+  cycle: number;
+  created_at: string;
+  faculty: string;
+  change: string; // short label, e.g. "sharpened"
+  detail: string; // before → after feel
+  rationale: string;
+  cited_signals: number[]; // signal ids that prompted the change
+}
+
+export interface Faculty {
+  name: string;
+  current_method: string;
+  times_revised: number;
+  first_cycle: number;
+  last_cycle: number;
+}
+
+export interface SelfModel {
+  version: number;
+  updated_at: string | null;
+  reflection: string;
+  faculties: Faculty[];
+}
+
+export interface SandboxStatus {
+  cycles: number;
+  faculty_count: number;
+  latest_cycle_at: string | null;
+}
+
 // Every read returns whether the bundled sample data stood in for a real
 // response, so the UI can flag it honestly.
 export interface Sourced<T> {

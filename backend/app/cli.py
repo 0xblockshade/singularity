@@ -13,6 +13,7 @@ import json
 from . import config, db, repo
 from .agent import client as narrator_client
 from .agent import ritual
+from .agent import sandbox
 from .agent import scanning
 
 
@@ -30,6 +31,9 @@ def main():
 
     p_run = sub.add_parser("run")
     p_run.add_argument("--fake", action="store_true", help="use the deterministic narrator")
+
+    p_sandbox = sub.add_parser("sandbox")
+    p_sandbox.add_argument("--fake", action="store_true", help="use the deterministic narrator")
 
     sub.add_parser("scan")
 
@@ -51,6 +55,15 @@ def main():
         else:
             narrator = narrator_client.AnthropicNarrator()
             result = ritual.run_ritual(conn, narrator)
+        print(json.dumps(result, indent=2))
+
+    elif args.cmd == "sandbox":
+        if args.fake:
+            narrator = narrator_client.FakeNarrator()
+            result = sandbox.run_sandbox(conn, narrator, model_name="fake")
+        else:
+            narrator = narrator_client.AnthropicNarrator()
+            result = sandbox.run_sandbox(conn, narrator)
         print(json.dumps(result, indent=2))
 
     elif args.cmd == "scan":

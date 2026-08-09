@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { getBeliefs, getMemory } from "@/lib/api";
+import { Link } from "react-router-dom";
+import { getBeliefs, getMemory, getSandboxStatus } from "@/lib/api";
 import { useAsyncData } from "@/hooks/useAsyncData";
 import { useStatus } from "@/context/StatusContext";
 import { BeliefGraph } from "@/components/mind/BeliefGraph";
@@ -13,7 +14,10 @@ import type { Belief } from "@/lib/types";
 export default function Mind() {
   const beliefsQ = useAsyncData(() => getBeliefs(), []);
   const memoryQ = useAsyncData(() => getMemory(), []);
+  const sandboxQ = useAsyncData(() => getSandboxStatus(), []);
   const { status } = useStatus();
+
+  const sandbox = sandboxQ.data?.data ?? null;
 
   const beliefs = useMemo(() => beliefsQ.data?.data ?? [], [beliefsQ.data]);
   const versions = memoryQ.data?.data ?? [];
@@ -115,6 +119,32 @@ export default function Mind() {
           )}
         </div>
       </section>
+
+      {/* Sandbox teaser */}
+      {sandbox ? (
+        <section className="mt-16" aria-label="The sandbox">
+          <Link
+            to="/sandbox"
+            className="focusable group flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-surface/40 p-5 transition-colors hover:border-signal/40"
+          >
+            <div className="max-w-prose">
+              <span className="label text-signal">The sandbox</span>
+              <p className="mt-2 text-sm leading-relaxed text-muted">
+                Beyond changing its mind, it changes <span className="text-ink">how it thinks</span>
+                {" "}— rewriting its own analytical methods from the research it reads.{" "}
+                <span className="font-mono text-ink">
+                  {sandbox.faculty_count} facult{sandbox.faculty_count === 1 ? "y" : "ies"}
+                </span>{" "}
+                revised across{" "}
+                <span className="font-mono text-ink">{sandbox.cycles} cycles</span>.
+              </p>
+            </div>
+            <span className="shrink-0 font-mono text-xs text-muted transition-colors group-hover:text-signal">
+              see the loop →
+            </span>
+          </Link>
+        </section>
+      ) : null}
     </div>
   );
 }

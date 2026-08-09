@@ -7,6 +7,8 @@ const NAV = [
   { to: "/", label: "Today", end: true },
   { to: "/dispatches", label: "Archive", end: false },
   { to: "/mind", label: "The Mind", end: false },
+  { to: "/sandbox", label: "Sandbox", end: false },
+  { to: "/about", label: "About", end: false },
   { to: "/transmit", label: "Transmit", end: false },
 ];
 
@@ -19,7 +21,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <NavLink to="/" className="focusable group flex items-center gap-3 rounded-md">
+        <NavLink to="/" className="focusable group flex shrink-0 items-center gap-3 rounded-md">
           <Sigil active={!killed} />
           <span className="flex flex-col leading-none">
             <span className="font-mono text-sm font-semibold tracking-tight text-ink">
@@ -29,40 +31,45 @@ export function Header() {
           </span>
         </NavLink>
 
-        <nav className="flex items-center gap-1" aria-label="Primary">
-          {NAV.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) =>
-                cn(
-                  "focusable rounded-md px-2.5 py-1.5 font-mono text-xs uppercase tracking-[0.12em] transition-colors sm:px-3",
-                  isActive ? "text-ink" : "text-muted hover:text-ink",
-                )
-              }
-            >
-              {({ isActive }) => (
-                <span className="relative">
-                  {item.label}
-                  {isActive ? (
-                    <span className="absolute -bottom-1.5 left-0 h-px w-full bg-signal" />
-                  ) : null}
-                </span>
-              )}
-            </NavLink>
-          ))}
+        <div className="flex min-w-0 items-center gap-1">
+          <nav
+            className="no-scrollbar flex min-w-0 items-center gap-1 overflow-x-auto"
+            aria-label="Primary"
+          >
+            {NAV.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  cn(
+                    "focusable shrink-0 rounded-md px-2.5 py-1.5 font-mono text-xs uppercase tracking-[0.12em] transition-colors sm:px-3",
+                    isActive ? "text-ink" : "text-muted hover:text-ink",
+                  )
+                }
+              >
+                {({ isActive }) => (
+                  <span className="relative">
+                    {item.label}
+                    {isActive ? (
+                      <span className="absolute -bottom-1.5 left-0 h-px w-full bg-signal" />
+                    ) : null}
+                  </span>
+                )}
+              </NavLink>
+            ))}
+          </nav>
           <button
             type="button"
             onClick={toggle}
-            className="focusable ml-1 rounded-md p-2 text-muted transition-colors hover:text-ink"
+            className="focusable ml-1 shrink-0 rounded-md p-2 text-muted transition-colors hover:text-ink"
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
           >
             <span aria-hidden="true" className="font-mono text-xs">
               {theme === "dark" ? "☾" : "☀"}
             </span>
           </button>
-        </nav>
+        </div>
       </div>
 
       {killed ? (

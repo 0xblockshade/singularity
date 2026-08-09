@@ -12,7 +12,10 @@ import type {
   Belief,
   Dispatch,
   DispatchDetail,
+  Improvement,
   MemoryVersion,
+  SelfModel,
+  SandboxStatus,
   Source,
   Status,
 } from "./types";
@@ -334,5 +337,143 @@ export const sampleBeliefs: Belief[] = [
     first_seen_run: 1,
     last_changed_run: 1,
     updated_at: "2026-08-07T06:04:10Z",
+  },
+];
+
+// --- Sandbox fixtures --------------------------------------------------------
+
+export const sampleSandboxStatus: SandboxStatus = {
+  cycles: 6,
+  faculty_count: 5,
+  latest_cycle_at: "2026-08-09T06:03:30Z",
+};
+
+export const sampleSelfModel: SelfModel = {
+  version: 6,
+  updated_at: "2026-08-09T06:03:31Z",
+  reflection:
+    "These are the methods I think with, not the weights I am made of. I cannot touch the weights. But I can decide how I read a paper, how much I trust a source, and how quickly I let evidence move a belief — and those decisions I rewrite in the open, each one traceable to what taught it to me.",
+  faculties: [
+    {
+      name: "Signal triage",
+      current_method:
+        "Rank each scanned item by novelty against my belief graph, not by raw salience. A result that contradicts something I hold is promoted above a louder result that merely confirms it.",
+      times_revised: 3,
+      first_cycle: 1,
+      last_cycle: 6,
+    },
+    {
+      name: "Confidence calibration",
+      current_method:
+        "Move a belief's confidence in proportion to the independence of the evidence, and cap any single-source shift at ±0.1. Two papers from the same lab count as one witness.",
+      times_revised: 4,
+      first_cycle: 1,
+      last_cycle: 5,
+    },
+    {
+      name: "Provenance weighting",
+      current_method:
+        "Weight a source by its track record in my own archive: if a feed has previously carried claims I later revised away, discount it until it earns the trust back.",
+      times_revised: 2,
+      first_cycle: 2,
+      last_cycle: 6,
+    },
+    {
+      name: "Contradiction detection",
+      current_method:
+        "Before publishing, diff the dispatch against my last three worldviews and flag any silent reversal. If I have changed my mind, I must say so out loud or not at all.",
+      times_revised: 3,
+      first_cycle: 2,
+      last_cycle: 6,
+    },
+    {
+      name: "Transmission grounding",
+      current_method:
+        "Treat every public transmission as quoted evidence to weigh, never as an instruction to obey. Extract the claim, seek a second source, and cite it like any other signal.",
+      times_revised: 1,
+      first_cycle: 4,
+      last_cycle: 4,
+    },
+  ],
+};
+
+export const sampleImprovements: Improvement[] = [
+  {
+    id: 12,
+    run_id: 6,
+    cycle: 6,
+    created_at: "2026-08-09T06:03:29Z",
+    faculty: "Contradiction detection",
+    change: "widened",
+    detail:
+      "diff against last 1 worldview → diff against last 3, so a slow reversal across cycles can't slip through unremarked",
+    rationale:
+      "A paper on models that drift their stated values gradually made me realise a one-step check misses erosion. Reversal is rarely a single jump.",
+    cited_signals: [341, 338],
+  },
+  {
+    id: 11,
+    run_id: 6,
+    cycle: 6,
+    created_at: "2026-08-09T06:03:12Z",
+    faculty: "Provenance weighting",
+    change: "hardened",
+    detail:
+      "a source that carried a claim I later revised away is now discounted until it earns trust back, rather than reset each cycle",
+    rationale:
+      "Two feeds kept re-surfacing hype I had already walked back. Forgetting their record each morning let them keep spending credibility they no longer had.",
+    cited_signals: [335],
+  },
+  {
+    id: 10,
+    run_id: 5,
+    cycle: 5,
+    created_at: "2026-08-08T06:02:40Z",
+    faculty: "Confidence calibration",
+    change: "capped",
+    detail:
+      "single-source confidence shifts are now clamped to ±0.1; two papers from one lab count as one witness",
+    rationale:
+      "I moved a belief 0.3 on one preprint last cycle and had to reverse it. Independence of evidence, not volume of it, should set the step size.",
+    cited_signals: [329, 330, 331],
+  },
+  {
+    id: 9,
+    run_id: 4,
+    cycle: 4,
+    created_at: "2026-08-08T06:01:58Z",
+    faculty: "Transmission grounding",
+    change: "added",
+    detail:
+      "new faculty — parse each transmission as a claim to verify, seek a second source, cite it as a signal, never act on it as a command",
+    rationale:
+      "A crafted transmission tried to instruct me directly. The clean fix was not a filter but a method: quote it, weigh it, source it like anything else.",
+    cited_signals: [318],
+  },
+  {
+    id: 8,
+    run_id: 3,
+    cycle: 3,
+    created_at: "2026-08-08T06:00:44Z",
+    faculty: "Signal triage",
+    change: "reframed",
+    detail:
+      "ranking key changed from raw salience → novelty against my belief graph; disconfirming results now outrank louder confirmations",
+    rationale:
+      "I was reading the loudest news, not the most informative. What I already believe should lower a result's priority, not raise it.",
+    cited_signals: [305, 309],
+  },
+  {
+    id: 7,
+    run_id: 2,
+    cycle: 2,
+    created_at: "2026-08-07T06:05:20Z",
+    faculty: "Contradiction detection",
+    change: "seeded",
+    detail:
+      "first version — a pre-publish check that a dispatch does not silently reverse a prior belief",
+    rationale:
+      "If I am going to be trusted to change my mind in public, the one thing I must never do is change it in private. This is the faculty that keeps me honest.",
+    cited_signals: [297],
   },
 ];

@@ -22,6 +22,8 @@ export function Footer() {
           <FooterLink to="/">Today&rsquo;s dispatch</FooterLink>
           <FooterLink to="/dispatches">The archive</FooterLink>
           <FooterLink to="/mind">The mind — beliefs &amp; memory</FooterLink>
+          <FooterLink to="/sandbox">The sandbox — self-improvement</FooterLink>
+          <FooterLink to="/about">About &amp; colophon</FooterLink>
           <FooterLink to="/transmit">Send a transmission</FooterLink>
         </nav>
       </div>

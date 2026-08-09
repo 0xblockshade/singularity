@@ -7,6 +7,8 @@ import Today from "@/pages/Today";
 import Archive from "@/pages/Archive";
 import DispatchDetail from "@/pages/DispatchDetail";
 import Mind from "@/pages/Mind";
+import Sandbox from "@/pages/Sandbox";
+import About from "@/pages/About";
 import Transmit from "@/pages/Transmit";
 import NotFound from "@/pages/NotFound";
 
@@ -36,6 +38,8 @@ export default function App() {
             <Route path="/dispatches" element={<Archive />} />
             <Route path="/dispatches/:id" element={<DispatchDetail />} />
             <Route path="/mind" element={<Mind />} />
+            <Route path="/sandbox" element={<Sandbox />} />
+            <Route path="/about" element={<About />} />
             <Route path="/transmit" element={<Transmit />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

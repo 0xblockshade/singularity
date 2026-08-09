@@ -81,6 +81,23 @@ CREATE TABLE IF NOT EXISTS beliefs (
     updated_at      TEXT NOT NULL
 );
 
+-- The Sandbox: recursive self-improvement log. Each row is one revision the agent made
+-- to one of its own analytical faculties (methods/heuristics), sourced to the research
+-- signals that prompted it. Append-only — the record of a mind improving itself.
+CREATE TABLE IF NOT EXISTS improvements (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  run_id INTEGER,
+  cycle INTEGER NOT NULL,
+  created_at TEXT NOT NULL,
+  faculty TEXT NOT NULL,
+  change TEXT NOT NULL,
+  detail TEXT NOT NULL,
+  rationale TEXT NOT NULL,
+  cited_signals TEXT NOT NULL DEFAULT '[]',
+  FOREIGN KEY(run_id) REFERENCES runs(id)
+);
+CREATE INDEX IF NOT EXISTS idx_improvements_cycle ON improvements(cycle);
+
 -- Attribution: which transmissions / signals shaped a given dispatch.
 CREATE TABLE IF NOT EXISTS sources (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,

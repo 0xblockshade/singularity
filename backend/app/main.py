@@ -133,6 +133,31 @@ def beliefs(conn=Depends(get_conn)):
     return [dict(b) for b in repo.all_beliefs(conn)]
 
 
+@app.get("/api/improvements")
+def improvements(limit: int = 100, conn=Depends(get_conn)):
+    out = []
+    for row in repo.list_improvements(conn, limit):
+        d = dict(row)
+        d["cited_signals"] = json.loads(d.get("cited_signals") or "[]")
+        out.append(d)
+    return out
+
+
+@app.get("/api/self-model")
+def self_model(conn=Depends(get_conn)):
+    return repo.self_model(conn)
+
+
+@app.get("/api/sandbox/status")
+def sandbox_status(conn=Depends(get_conn)):
+    sm = repo.self_model(conn)
+    return {
+        "cycles": repo.latest_cycle(conn),
+        "faculty_count": len(sm["faculties"]),
+        "latest_cycle_at": sm["updated_at"],
+    }
+
+
 @app.get("/api/status")
 def status(conn=Depends(get_conn)):
     run = repo.latest_run(conn)

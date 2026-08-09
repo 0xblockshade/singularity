@@ -10,14 +10,20 @@ import {
   sampleBeliefs,
   sampleDispatchDetail,
   sampleDispatches,
+  sampleImprovements,
   sampleMemory,
+  sampleSelfModel,
+  sampleSandboxStatus,
   sampleStatus,
 } from "./fixtures";
 import type {
   Belief,
   Dispatch,
   DispatchDetail,
+  Improvement,
   MemoryVersion,
+  SelfModel,
+  SandboxStatus,
   Sourced,
   Status,
   TransmissionReceipt,
@@ -77,6 +83,24 @@ export async function getMemory(): Promise<Sourced<MemoryVersion[]>> {
 export async function getBeliefs(): Promise<Sourced<Belief[]>> {
   const res = await tryGet<Belief[]>("/beliefs");
   if (!res || res.length === 0) return fixture(sampleBeliefs);
+  return live(res);
+}
+
+export async function getImprovements(limit = 100): Promise<Sourced<Improvement[]>> {
+  const res = await tryGet<Improvement[]>(`/improvements?limit=${limit}`);
+  if (!res || res.length === 0) return fixture(sampleImprovements);
+  return live(res);
+}
+
+export async function getSelfModel(): Promise<Sourced<SelfModel>> {
+  const res = await tryGet<SelfModel>("/self-model");
+  if (!res || res.faculties.length === 0) return fixture(sampleSelfModel);
+  return live(res);
+}
+
+export async function getSandboxStatus(): Promise<Sourced<SandboxStatus>> {
+  const res = await tryGet<SandboxStatus>("/sandbox/status");
+  if (!res || res.cycles === 0) return fixture(sampleSandboxStatus);
   return live(res);
 }
 

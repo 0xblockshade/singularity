@@ -25,6 +25,10 @@ MAX_TRANSMISSION_CHARS = int(os.environ.get("SINGULARITY_MAX_TX_CHARS", "4000"))
 MAX_SIGNALS_PER_RUN = int(os.environ.get("SINGULARITY_MAX_SIGNALS", "60"))
 MAX_TRANSMISSIONS_PER_RUN = int(os.environ.get("SINGULARITY_MAX_TX", "200"))
 
+# Sandbox (recursive self-improvement) loop: how many recent research signals
+# (arxiv / news) the agent studies per cycle when revising its own faculties.
+SANDBOX_RESEARCH_SIGNALS = int(os.environ.get("SINGULARITY_SANDBOX_SIGNALS", "25"))
+
 # ---------- Phase 4: signal ingestion ----------
 
 def _truthy(val: str) -> bool:

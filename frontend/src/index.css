@@ -121,6 +121,15 @@ body::before {
   .focusable {
     @apply outline-none focus-visible:ring-2 focus-visible:ring-signal/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
   }
+
+  /* self-contained horizontal scroll (nav on narrow screens) without a visible bar */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* dispatch prose — serif, archival, generous measure */

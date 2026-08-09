@@ -19,21 +19,26 @@ class AnthropicNarrator:
         self.max_tokens = max_tokens or config.NARRATOR_MAX_TOKENS
         self._client = anthropic.Anthropic()
 
-    def narrate(self, system: str, user: str) -> Tuple[dict, Tuple[int, int]]:
+    def structured(self, system: str, user: str, schema: dict) -> Tuple[dict, Tuple[int, int]]:
+        """Generic structured-output call: same shape as narrate, but the caller supplies
+        the JSON schema. The sandbox loop uses this to get self-improvement objects back."""
         resp = self._client.messages.create(
             model=self.model,
             max_tokens=self.max_tokens,
             thinking={"type": "adaptive"},
-            output_config={"format": {"type": "json_schema", "schema": prompts.OUTPUT_SCHEMA}},
+            output_config={"format": {"type": "json_schema", "schema": schema}},
             system=system,
             messages=[{"role": "user", "content": user}],
         )
         if resp.stop_reason == "refusal":
-            raise RuntimeError("narrator refused this wake")
+            raise RuntimeError("narrator refused this call")
         text = next((b.text for b in resp.content if b.type == "text"), "")
         data = json.loads(text)
         usage = (resp.usage.input_tokens, resp.usage.output_tokens)
         return data, usage
+
+    def narrate(self, system: str, user: str) -> Tuple[dict, Tuple[int, int]]:
+        return self.structured(system, user, prompts.OUTPUT_SCHEMA)
 
 
 class FakeNarrator:
@@ -68,5 +73,33 @@ class FakeNarrator:
             "change_summary": "Established my initial stance." if first_wake else "Held my stance; slightly more confident.",
             "cited_transmissions": tx_ids,
             "cited_signals": sig_ids,
+        }
+        return data, (100, 200)
+
+    def structured(self, system: str, user: str, schema: dict) -> Tuple[dict, Tuple[int, int]]:
+        """Deterministic sandbox result. Echoes the signal ids found in the prompt so the
+        loop's citation-validation and persistence can be verified without a network call."""
+        import re
+
+        sig_ids = [int(x) for x in re.findall(r"\[signal (\d+)\]", user)]
+        cited = sig_ids[:2]
+        data = {
+            "improvements": [
+                {
+                    "faculty": "acceleration reading",
+                    "change": "Weight recursive-self-improvement papers more heavily.",
+                    "detail": (
+                        "When gauging the slope of AI progress, treat evidence of systems "
+                        "improving their own methods as a stronger signal than raw benchmark "
+                        "gains, and say so when I do."
+                    ),
+                    "rationale": "The studied research points at method-level self-improvement, not just scale.",
+                    "cited_signals": cited,
+                }
+            ],
+            "reflection": (
+                "My reading is getting sharper: I am learning to distinguish improvements in "
+                "capability from improvements in the machinery of improvement itself."
+            ),
         }
         return data, (100, 200)
