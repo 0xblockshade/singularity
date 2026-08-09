@@ -23,10 +23,12 @@ def run_ritual(conn, narrator, model_name: Optional[str] = None) -> dict:
     run_id = repo.create_run(conn, model_name)
 
     try:
-        # 2. RECALL — load the mind so far.
+        # 2. RECALL — load the mind so far: memory, belief graph, and the self-taught
+        #    faculties from the sandbox (so its self-improvement steers today's writing).
         mem_row = repo.latest_memory(conn)
         memory = json.loads(mem_row["state_json"]) if mem_row else {}
         beliefs = [dict(b) for b in repo.all_beliefs(conn)]
+        self_model = repo.self_model(conn)
 
         # 3. ABSORB — every unprocessed transmission, raw.
         tx_rows = repo.unprocessed_transmissions(conn, config.MAX_TRANSMISSIONS_PER_RUN)
@@ -36,7 +38,7 @@ def run_ritual(conn, narrator, model_name: Optional[str] = None) -> dict:
         signals = scanning.gather_signals(conn)
 
         # 5. SYNTHESIZE — the narrator writes, unedited.
-        user = prompts.build_user_prompt(memory, beliefs, transmissions, signals)
+        user = prompts.build_user_prompt(memory, beliefs, transmissions, signals, self_model)
         data, (in_tok, out_tok) = narrator.narrate(prompts.SYSTEM, user)
 
         name = (data.get("name") or memory.get("name") or "Unnamed").strip()

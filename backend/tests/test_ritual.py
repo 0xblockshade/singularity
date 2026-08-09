@@ -1,5 +1,5 @@
 from app import config, repo
-from app.agent import ritual
+from app.agent import prompts, ritual
 from app.agent.client import FakeNarrator
 
 
@@ -51,6 +51,37 @@ def test_tripwire_blocks_illegal_dispatch(conn):
     assert repo.list_dispatches(conn) == []
     latest_run = repo.latest_run(conn)
     assert latest_run["status"] == "blocked"
+
+
+def test_sandbox_faculties_reach_the_dispatch_prompt(conn):
+    # A faculty taught in the sandbox must show up in the daily dispatch prompt, so
+    # self-improvement is load-bearing — it changes how the next dispatch is written.
+    run_id = repo.create_run(conn, "fake")
+    repo.insert_improvement(
+        conn, run_id, 1, "claim discounting",
+        "discount bare vendor benchmarks",
+        "Treat any unverified first-party benchmark as weak evidence until reproduced.",
+        "Papers show benchmark inconsistency.", [1],
+    )
+    sm = repo.self_model(conn)
+    prompt = prompts.build_user_prompt({}, [], [], [], sm)
+    assert "OPERATING METHODS" in prompt
+    assert "claim discounting" in prompt
+    assert "reproduced" in prompt  # the actual method text is injected
+
+    # And with no sandbox history, the section is absent (no empty header).
+    empty = prompts.build_user_prompt({}, [], [], [], repo.self_model(conn) if False else {"faculties": []})
+    assert "OPERATING METHODS" not in empty
+
+
+def test_ritual_runs_with_faculties_present(conn):
+    _seed(conn)
+    repo.insert_improvement(
+        conn, repo.create_run(conn, "fake"), 1, "absence reading",
+        "read silence", "Distinguish world-silence from instrument-silence.", "x", [],
+    )
+    result = ritual.run_ritual(conn, FakeNarrator(name="Nine"), model_name="fake")
+    assert result["status"] == "published"
 
 
 def test_kill_switch_halts_ritual(conn):
