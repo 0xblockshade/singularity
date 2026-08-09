@@ -109,6 +109,7 @@ def dispatch(dispatch_id: int, conn=Depends(get_conn)):
         raise HTTPException(status_code=404, detail="no such dispatch")
     out = dict(d)
     out["sources"] = [dict(s) for s in repo.dispatch_sources(conn, dispatch_id)]
+    out["publications"] = [dict(p) for p in repo.dispatch_publications(conn, dispatch_id)]
     return out
 
 

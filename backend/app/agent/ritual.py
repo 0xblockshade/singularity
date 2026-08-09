@@ -9,7 +9,7 @@ import json
 from typing import Optional
 
 from .. import config, repo
-from . import prompts, safety, scanning
+from . import prompts, publish, safety, scanning
 
 
 def run_ritual(conn, narrator, model_name: Optional[str] = None) -> dict:
@@ -79,7 +79,18 @@ def run_ritual(conn, narrator, model_name: Optional[str] = None) -> dict:
         repo.mark_signals_used(conn, [s["id"] for s in signals], run_id)
 
         repo.finish_run(conn, run_id, "published", in_tok, out_tok)
-        return {"status": "published", "run_id": run_id, "dispatch_id": dispatch_id, "name": name}
+
+        # 9. SYNDICATE — best-effort post to X (or any enabled channel). Never breaks
+        #    the wake; a failure is logged to `publications` and the dispatch still stands.
+        syndication = publish.publish_dispatch(conn, dispatch_id, title)
+
+        return {
+            "status": "published",
+            "run_id": run_id,
+            "dispatch_id": dispatch_id,
+            "name": name,
+            "syndication": syndication,
+        }
 
     except Exception as exc:  # noqa: BLE001 — record any failure against the run, then re-raise
         repo.finish_run(conn, run_id, "error", note=str(exc)[:500])

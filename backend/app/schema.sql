@@ -98,6 +98,20 @@ CREATE TABLE IF NOT EXISTS improvements (
 );
 CREATE INDEX IF NOT EXISTS idx_improvements_cycle ON improvements(cycle);
 
+-- Syndication log: where a dispatch was posted off-site (e.g. X). Append-only,
+-- one row per (dispatch, channel) attempt. A successful row prevents double-posting.
+CREATE TABLE IF NOT EXISTS publications (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    dispatch_id INTEGER NOT NULL REFERENCES dispatches(id),
+    channel     TEXT NOT NULL,               -- x | ...
+    status      TEXT NOT NULL,               -- posted | error | skipped
+    external_id TEXT,                         -- the tweet id, when posted
+    url         TEXT,                         -- permalink to the post
+    posted_at   TEXT NOT NULL,
+    error       TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_pub_dispatch ON publications(dispatch_id, channel);
+
 -- Attribution: which transmissions / signals shaped a given dispatch.
 CREATE TABLE IF NOT EXISTS sources (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -228,6 +228,34 @@ def dispatch_sources(conn, dispatch_id: int) -> List[sqlite3.Row]:
     ).fetchall()
 
 
+# ---------- publications (off-site syndication, e.g. X) ----------
+
+def already_posted(conn, dispatch_id: int, channel: str) -> bool:
+    """True if this dispatch was already posted to this channel (prevents double-posting)."""
+    row = conn.execute(
+        "SELECT 1 FROM publications WHERE dispatch_id=? AND channel=? AND status='posted' LIMIT 1",
+        (dispatch_id, channel),
+    ).fetchone()
+    return row is not None
+
+
+def record_publication(conn, dispatch_id: int, channel: str, status: str,
+                       external_id: str = None, url: str = None, error: str = None) -> int:
+    cur = conn.execute(
+        "INSERT INTO publications(dispatch_id, channel, status, external_id, url, posted_at, error) "
+        "VALUES(?,?,?,?,?,?,?)",
+        (dispatch_id, channel, status, external_id, url, now_iso(), error),
+    )
+    conn.commit()
+    return cur.lastrowid
+
+
+def dispatch_publications(conn, dispatch_id: int) -> List[sqlite3.Row]:
+    return conn.execute(
+        "SELECT * FROM publications WHERE dispatch_id=? ORDER BY id DESC", (dispatch_id,)
+    ).fetchall()
+
+
 # ---------- sandbox: recursive self-improvement ----------
 
 def latest_cycle(conn) -> int:

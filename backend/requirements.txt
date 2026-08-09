@@ -5,6 +5,7 @@ anthropic
 apscheduler
 httpx
 feedparser        # RSS / arXiv (Phase 4 signal adapters)
+tweepy            # X (Twitter) API v2 — post dispatches (OAuth 1.0a user context)
 pydantic
 
 # dev / test

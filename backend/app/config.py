@@ -83,6 +83,17 @@ SALIENCE_KEYWORDS = {
     "singularity": 0.7,
 }
 
+# Off-site syndication — post each dispatch to X (Twitter) via the official API v2,
+# OAuth 1.0a user context (free tier can WRITE). All four tokens come from the X
+# developer portal and are read from the environment — never stored in the repo.
+PUBLISH_X = os.environ.get("SINGULARITY_PUBLISH_X", "").lower() in ("1", "true", "yes", "on")
+X_API_KEY = os.environ.get("X_API_KEY", "")
+X_API_SECRET = os.environ.get("X_API_SECRET", "")
+X_ACCESS_TOKEN = os.environ.get("X_ACCESS_TOKEN", "")
+X_ACCESS_SECRET = os.environ.get("X_ACCESS_SECRET", "")
+# Public site URL, used to build the link back to the full dispatch in each post.
+PUBLIC_URL = os.environ.get("SINGULARITY_PUBLIC_URL", "").rstrip("/")
+
 # Settings keys stored in the DB.
 KEY_KILL_SWITCH = "kill_switch"        # "1" halts autonomous publishing
 KEY_NARRATOR_NAME = "narrator_name"    # set on first run when the agent names itself

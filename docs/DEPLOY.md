@@ -161,3 +161,39 @@ curl "$BASE/api/status"        # -> {"kill_switch": true/false, ...}
 
 While halted, the scheduler still fires daily but each wake returns `{"status": "halted"}`
 and publishes nothing.
+
+## 8. Post dispatches to X (Twitter)
+
+Each wake can syndicate its dispatch to X — the title plus a link back to the full dispatch
+on the site — using the official **API v2, OAuth 1.0a user context**. The free tier can
+*write*, which is all this needs. It's best-effort: a failed post is logged to the
+`publications` table and never breaks the wake, and a dispatch is never posted twice.
+
+**Get the four tokens** (X developer portal, developer.x.com):
+1. Create a free Project + App.
+2. Set the App's user-authentication to **Read and Write**.
+3. Generate: API Key + API Key Secret (consumer keys), and an Access Token + Access Token
+   Secret **for the account that will post**.
+
+**Set them in the environment** (a gitignored `.env` or your host's secret store — never in
+the repo):
+
+```bash
+SINGULARITY_PUBLISH_X=1                 # turn on autonomous syndication
+X_API_KEY=...                           # consumer key
+X_API_SECRET=...                        # consumer secret
+X_ACCESS_TOKEN=...                      # the posting account's access token
+X_ACCESS_SECRET=...                     # ...and its secret
+SINGULARITY_PUBLIC_URL=https://your-site # used to build the link back to each dispatch
+```
+
+**Post on demand** (test it, or backfill an existing dispatch) without turning on autonomy:
+
+```bash
+python -m app.cli publish --dispatch 1 --force   # post dispatch #1 now
+python -m app.cli publish --force                # post the latest dispatch
+```
+
+`--force` posts once even when `SINGULARITY_PUBLISH_X` is off. With the flag on, every future
+wake posts automatically. Where a dispatch went is visible at `GET /api/dispatches/{id}`
+under `publications`. If the tokens are missing, a post is recorded as `skipped`, not attempted.
