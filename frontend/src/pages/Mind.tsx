@@ -6,6 +6,7 @@ import { useStatus } from "@/context/StatusContext";
 import { BeliefGraph } from "@/components/mind/BeliefGraph";
 import { MemoryTimeline } from "@/components/mind/MemoryTimeline";
 import { SampleBadge } from "@/components/SampleBadge";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { StateBlock } from "@/components/ui/StateBlock";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { confidencePct } from "@/lib/utils";
@@ -32,27 +33,25 @@ export default function Mind() {
   const narratorName = status?.narrator_name ?? "the mind";
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pt-14">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <span className="label text-signal">The mind</span>
-          <h1 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-            Beliefs, and how they changed
-          </h1>
-          <p className="mt-2 max-w-prose text-sm text-muted">
+    <div className="mx-auto max-w-6xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16">
+      <PageHeader
+        eyebrow="The mind"
+        title="Beliefs, and how they changed"
+        description={
+          <>
             Two views of one mind: the live constellation of what it currently believes, and the
             append-only record of every worldview it has held. Watch it revise itself — and check
             that it never pretends it didn&rsquo;t.
-          </p>
-        </div>
-        {sample ? <SampleBadge /> : null}
-      </header>
+          </>
+        }
+        aside={sample ? <SampleBadge /> : null}
+      />
 
       {/* Belief graph + detail */}
-      <section className="mt-8" aria-label="Belief graph">
+      <section className="mt-10" aria-label="Belief graph">
         <div className="grid gap-5 lg:grid-cols-[1fr_20rem]">
           {beliefsQ.loading ? (
-            <Skeleton className="h-[420px] w-full rounded-xl sm:h-[520px]" />
+            <Skeleton className="h-[420px] w-full rounded-2xl sm:h-[520px]" />
           ) : beliefsQ.error ? (
             <StateBlock
               tone="alert"
@@ -86,9 +85,9 @@ export default function Mind() {
       </section>
 
       {/* Memory timeline */}
-      <section className="mt-16" aria-label="Memory timeline">
+      <section className="mt-20" aria-label="Memory timeline">
         <div className="flex items-baseline gap-3">
-          <span className="label text-ember">Memory</span>
+          <span className="eyebrow">Memory</span>
           <h2 className="font-sans text-xl font-semibold tracking-tight text-ink">
             The evolving worldview
           </h2>
@@ -100,7 +99,7 @@ export default function Mind() {
 
         <div className="mt-6">
           {memoryQ.loading ? (
-            <Skeleton className="h-64 w-full rounded-xl" />
+            <Skeleton className="h-64 w-full rounded-2xl" />
           ) : memoryQ.error ? (
             <StateBlock
               tone="alert"
@@ -122,25 +121,25 @@ export default function Mind() {
 
       {/* Sandbox teaser */}
       {sandbox ? (
-        <section className="mt-16" aria-label="The sandbox">
+        <section className="mt-20" aria-label="The sandbox">
           <Link
             to="/sandbox"
-            className="focusable group flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-surface/40 p-5 transition-colors hover:border-signal/40"
+            className="focusable panel-shell group flex flex-wrap items-center justify-between gap-4 p-5 transition-colors hover:border-ink/20 sm:p-6"
           >
             <div className="max-w-prose">
-              <span className="label text-signal">The sandbox</span>
+              <span className="eyebrow">The sandbox</span>
               <p className="mt-2 text-sm leading-relaxed text-muted">
                 Beyond changing its mind, it changes <span className="text-ink">how it thinks</span>
                 {" "}— rewriting its own analytical methods from the research it reads.{" "}
-                <span className="font-mono text-ink">
+                <span className="font-semibold tabular-nums text-ink">
                   {sandbox.faculty_count} facult{sandbox.faculty_count === 1 ? "y" : "ies"}
                 </span>{" "}
                 revised across{" "}
-                <span className="font-mono text-ink">{sandbox.cycles} cycles</span>.
+                <span className="font-semibold tabular-nums text-ink">{sandbox.cycles} cycles</span>.
               </p>
             </div>
-            <span className="shrink-0 font-mono text-xs text-muted transition-colors group-hover:text-signal">
-              see the loop →
+            <span className="shrink-0 text-sm font-medium text-muted transition-colors group-hover:text-ink">
+              See the loop →
             </span>
           </Link>
         </section>
@@ -162,8 +161,8 @@ function BeliefDetail({
 }) {
   if (!belief) {
     return (
-      <aside className="rounded-xl border border-line bg-surface/40 p-5">
-        <span className="label">Inspect</span>
+      <aside className="panel-shell p-5 sm:p-6">
+        <span className="eyebrow">Inspect</span>
         <p className="mt-2 text-sm text-muted">
           Select a node to read its stance and confidence, or pick from the list below.
         </p>
@@ -178,7 +177,7 @@ function BeliefDetail({
                   className="focusable flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-panel"
                 >
                   <span className="truncate text-xs text-ink">{b.concept}</span>
-                  <span className="shrink-0 font-mono text-[0.625rem] tabular-nums text-muted">
+                  <span className="shrink-0 text-[0.6875rem] tabular-nums text-muted">
                     {confidencePct(b.confidence)}
                   </span>
                 </button>
@@ -192,13 +191,13 @@ function BeliefDetail({
   const changed = belief.last_changed_run === latestRun;
 
   return (
-    <aside className="rounded-xl border border-signal/40 bg-surface/60 p-5">
+    <aside className="panel-shell p-5 sm:p-6">
       <div className="flex items-start justify-between gap-2">
-        <span className="label text-signal">Belief</span>
+        <span className="eyebrow">Belief</span>
         <button
           type="button"
           onClick={() => onSelect(null)}
-          className="focusable rounded-sm font-mono text-[0.625rem] text-faint hover:text-ink"
+          className="focusable rounded-sm text-xs text-faint hover:text-ink"
           aria-label="Clear selection"
         >
           clear ✕
@@ -208,34 +207,31 @@ function BeliefDetail({
       <p className="mt-2 text-sm leading-relaxed text-muted">{belief.stance}</p>
 
       <div className="mt-4">
-        <div className="flex items-center justify-between font-mono text-[0.6875rem] text-muted">
+        <div className="flex items-center justify-between text-[0.6875rem] text-muted">
           <span>confidence</span>
           <span className="tabular-nums text-ink">{confidencePct(belief.confidence)}</span>
         </div>
         <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-panel">
           <div
-            className="h-full rounded-full bg-signal transition-all"
+            className="h-full rounded-full bg-ink transition-all"
             style={{ width: confidencePct(belief.confidence) }}
           />
         </div>
       </div>
 
-      <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-line pt-4 font-mono text-[0.6875rem]">
+      <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-line/70 pt-4 text-[0.6875rem]">
         <div>
           <dt className="text-faint">first seen</dt>
-          <dd className="mt-0.5 text-ink">run #{belief.first_seen_run}</dd>
+          <dd className="mt-0.5 tabular-nums text-ink">run #{belief.first_seen_run}</dd>
         </div>
         <div>
           <dt className="text-faint">last changed</dt>
-          <dd className="mt-0.5 text-ink">run #{belief.last_changed_run}</dd>
+          <dd className="mt-0.5 tabular-nums text-ink">run #{belief.last_changed_run}</dd>
         </div>
       </dl>
 
       {changed ? (
-        <p className="mt-4 flex items-center gap-2 rounded-md border border-ember/30 bg-ember/10 px-3 py-2 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-ember">
-          <span className="h-1.5 w-1.5 rounded-full bg-ember" aria-hidden="true" />
-          revised this run
-        </p>
+        <p className="mt-4 text-xs text-muted">Revised this run</p>
       ) : null}
     </aside>
   );

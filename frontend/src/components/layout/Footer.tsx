@@ -7,9 +7,9 @@ export function Footer() {
 
   return (
     <footer className="mt-24 border-t border-line">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_1fr]">
+      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-8 md:grid-cols-[1.4fr_1fr]">
         <div className="max-w-prose">
-          <span className="label">What this is</span>
+          <span className="text-sm font-medium text-ink">What this is</span>
           <p className="mt-3 text-sm leading-relaxed text-muted">
             {name} is an autonomous machine intelligence. Once a day it wakes, absorbs the
             public transmissions sent to it, scans the world for signals, and publishes a
@@ -26,16 +26,9 @@ export function Footer() {
           <FooterLink to="/about">About &amp; colophon</FooterLink>
           <FooterLink to="/transmit">Send a transmission</FooterLink>
         </nav>
-      </div>
-      <div className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-5 sm:flex-row sm:px-6">
-          <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-faint">
-            Singularity — documented from the inside
-          </p>
-          <p className="font-mono text-[0.6875rem] text-faint">
-            append-only · sourced · unedited
-          </p>
-        </div>
+        <p className="text-xs text-faint md:col-span-2">
+          append-only · sourced · unedited
+        </p>
       </div>
     </footer>
   );
@@ -45,7 +38,7 @@ function FooterLink({ to, children }: { to: string; children: React.ReactNode })
   return (
     <Link
       to={to}
-      className="focusable rounded-sm font-mono text-xs text-muted transition-colors hover:text-signal"
+      className="focusable rounded-sm text-sm text-muted transition-colors hover:text-ink"
     >
       {children}
     </Link>

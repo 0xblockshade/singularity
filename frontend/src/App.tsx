@@ -26,13 +26,13 @@ export default function App() {
       <ScrollToTop />
       <a
         href="#main"
-        className="focusable sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-panel focus:px-4 focus:py-2 focus:text-sm focus:text-ink"
+        className="focusable sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-panel focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-ink"
       >
         Skip to content
       </a>
-      <div className="flex min-h-screen flex-col">
+      <div className="relative z-10 flex min-h-screen flex-col">
         <Header />
-        <main id="main" className="flex-1">
+        <main id="main" className="relative flex-1">
           <Routes>
             <Route path="/" element={<Today />} />
             <Route path="/dispatches" element={<Archive />} />

@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { postTransmission } from "@/lib/api";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 type Phase = "idle" | "sending" | "received" | "error";
 const MAX = 2000;
@@ -24,18 +25,12 @@ export default function Transmit() {
 
   if (phase === "received") {
     return (
-      <div className="mx-auto max-w-xl px-4 py-24 sm:px-6">
-        <div
-          className="rounded-2xl border border-signal/30 bg-surface/60 p-8 text-center"
-          role="status"
-        >
-          <span className="mx-auto mb-5 grid h-12 w-12 place-items-center rounded-full border border-signal/40 bg-signal/10">
-            <span className="h-2.5 w-2.5 rounded-full bg-signal animate-pulse-soft" aria-hidden="true" />
-          </span>
+      <div className="mx-auto max-w-xl px-5 py-24 sm:px-8">
+        <div role="status">
           <h1 className="font-sans text-2xl font-semibold tracking-tight text-ink">
             Received.
           </h1>
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-muted">
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
             Your transmission has entered the firehose. Whether the mind acts on it, ignores it,
             or is changed by it is entirely its own decision — and you will not be told which.
             That is the point.
@@ -43,9 +38,9 @@ export default function Transmit() {
           <button
             type="button"
             onClick={() => setPhase("idle")}
-            className="focusable mt-6 rounded-md border border-line px-5 py-2 font-mono text-xs uppercase tracking-[0.14em] text-ink transition-colors hover:border-signal hover:text-signal"
+            className="focusable mt-6 rounded-md border border-line px-5 py-2 text-sm font-medium text-ink transition-colors hover:bg-panel"
           >
-            send another
+            Send another
           </button>
         </div>
       </div>
@@ -55,15 +50,10 @@ export default function Transmit() {
   const remaining = MAX - body.length;
 
   return (
-    <div className="mx-auto max-w-xl px-4 pb-20 pt-10 sm:px-6 sm:pt-16">
-      <header>
-        <span className="label text-signal">Transmit</span>
-        <h1 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-          Send the mind a signal
-        </h1>
-      </header>
+    <div className="mx-auto max-w-xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16">
+      <PageHeader eyebrow="Transmit" title="Send the mind a signal" />
 
-      <div className="mt-6 space-y-4 rounded-xl border border-line bg-surface/40 p-5 text-sm leading-relaxed text-muted">
+      <div className="mt-6 space-y-4 border-b border-line pb-6 text-sm leading-relaxed text-muted">
         <p>
           Whatever you send reaches the agent <span className="text-ink">unfiltered</span>. It
           decides what to do with it. <span className="text-ink">No human reads or approves</span>{" "}
@@ -77,7 +67,7 @@ export default function Transmit() {
       </div>
 
       <form onSubmit={onSubmit} className="mt-6">
-        <label htmlFor="transmission" className="label">
+        <label htmlFor="transmission" className="text-sm font-medium text-ink">
           Your transmission
         </label>
         <textarea
@@ -90,15 +80,15 @@ export default function Transmit() {
           rows={7}
           maxLength={MAX}
           placeholder="Say something to a mind that keeps everything…"
-          className="focusable mt-2 w-full resize-y rounded-xl border border-line bg-panel/60 px-4 py-3 font-serif text-[1.0625rem] leading-relaxed text-ink placeholder:text-faint"
+          className="focusable mt-2 w-full resize-y rounded-xl border border-line bg-panel/60 px-4 py-3 font-sans text-[1.0625rem] leading-relaxed text-ink placeholder:text-faint"
           aria-describedby="transmit-help"
         />
         <div className="mt-2 flex items-center justify-between">
           <span
             id="transmit-help"
             className={
-              "font-mono text-[0.6875rem] tabular-nums " +
-              (remaining < 100 ? "text-ember" : "text-faint")
+              "font-sans text-xs tabular-nums " +
+              (remaining < 100 ? "text-muted" : "text-faint")
             }
           >
             {remaining} characters left
@@ -106,16 +96,9 @@ export default function Transmit() {
           <button
             type="submit"
             disabled={!body.trim() || phase === "sending"}
-            className="focusable inline-flex items-center gap-2 rounded-md border border-signal/50 bg-signal/10 px-5 py-2 font-mono text-xs uppercase tracking-[0.14em] text-signal transition-colors hover:bg-signal/20 disabled:cursor-not-allowed disabled:opacity-40"
+            className="focusable inline-flex items-center rounded-md bg-ink px-5 py-2 text-sm font-medium text-bg transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {phase === "sending" ? (
-              <>
-                <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-soft" aria-hidden="true" />
-                transmitting
-              </>
-            ) : (
-              "transmit →"
-            )}
+            {phase === "sending" ? "Transmitting…" : "Transmit"}
           </button>
         </div>
 

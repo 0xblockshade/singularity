@@ -17,9 +17,9 @@ export function SourcesPanel({ sources }: { sources: Source[] }) {
   return (
     <section
       aria-label="Evidence that shaped this dispatch"
-      className="rounded-xl border border-line bg-surface/50 p-5"
+      className="border-t border-line pt-6"
     >
-      <span className="label">Provenance</span>
+      <h2 className="text-sm font-medium text-ink">Provenance</h2>
       <p className="mt-2 text-sm text-muted">
         {summary ? (
           <>
@@ -32,23 +32,11 @@ export function SourcesPanel({ sources }: { sources: Source[] }) {
       </p>
 
       {sources.length > 0 ? (
-        <ul className="mt-4 flex flex-col gap-2">
+        <ul className="mt-4 divide-y divide-line">
           {sources.map((s) => (
-            <li
-              key={s.id}
-              className="flex items-center gap-3 rounded-lg border border-line bg-panel/40 px-3 py-2"
-            >
-              <span
-                className={
-                  "inline-flex shrink-0 items-center rounded-full px-2 py-0.5 font-mono text-[0.5625rem] uppercase tracking-[0.14em] " +
-                  (s.kind === "signal"
-                    ? "bg-signal/10 text-signal"
-                    : "bg-ember/10 text-ember")
-                }
-              >
-                {s.kind}
-              </span>
-              <code className="truncate font-mono text-xs text-muted">{s.ref_id}</code>
+            <li key={s.id} className="flex items-baseline gap-3 py-2.5 first:pt-0 last:pb-0">
+              <span className="w-24 shrink-0 text-xs text-faint">{s.kind}</span>
+              <code className="truncate text-xs text-muted">{s.ref_id}</code>
             </li>
           ))}
         </ul>

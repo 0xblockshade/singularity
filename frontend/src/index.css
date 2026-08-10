@@ -3,41 +3,39 @@
 @tailwind utilities;
 
 /*
-  Singularity — an instrument, not a dashboard.
-  Palette: rich black "void", cool phosphor "signal" for data, warm "ember" for
-  the mind's own voice. Mono chrome, serif prose, sans for connective tissue.
+  Singularity — Vercel-adjacent editorial.
+  Near-black surfaces, zinc neutrals, soft sky accent.
+  Manrope for UI; Newsreader for long-form reading.
 */
 :root {
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: "Manrope", system-ui, -apple-system, sans-serif;
   --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
 
   /* Colors are space-separated sRGB channels so Tailwind alpha modifiers
      (bg-signal/10, ring-signal/70, …) work. Use rgb(var(--x)) in raw CSS. */
-  /* dark is the primary theme */
-  --bg: 6 8 9;
-  --surface: 10 14 17;
-  --panel: 14 19 24;
-  --ink: 217 224 230;
-  --muted: 121 133 143;
-  --faint: 74 84 92;
-  --line: 26 33 39;
-  --signal: 70 200 173;
-  --ember: 214 154 92;
-  --alert: 224 100 92;
+  --bg: 0 0 0;
+  --surface: 10 10 10;
+  --panel: 18 18 18;
+  --ink: 250 250 250;
+  --muted: 161 161 170;
+  --faint: 82 82 91;
+  --line: 38 38 42;
+  --signal: 125 170 245;
+  --ember: 161 161 170;
+  --alert: 239 68 68;
 }
 
 :root.light {
-  --bg: 244 242 236;
-  --surface: 251 250 246;
-  --panel: 255 255 255;
-  --ink: 26 33 39;
-  --muted: 90 101 109;
-  --faint: 151 161 168;
-  --line: 220 216 205;
-  --signal: 20 135 111;
-  --ember: 168 106 38;
-  --alert: 184 58 50;
+  --bg: 255 255 255;
+  --surface: 250 250 250;
+  --panel: 244 244 245;
+  --ink: 9 9 11;
+  --muted: 113 113 122;
+  --faint: 161 161 170;
+  --line: 228 228 231;
+  --signal: 37 99 235;
+  --ember: 113 113 122;
+  --alert: 220 38 38;
 }
 
 * {
@@ -59,29 +57,15 @@ body {
   min-height: 100vh;
 }
 
-/* faint archival grid + top-lit vignette, fixed behind everything */
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    radial-gradient(120% 80% at 50% -10%, rgb(var(--signal) / 0.06), transparent 60%),
-    linear-gradient(rgb(var(--line)) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(var(--line)) 1px, transparent 1px);
-  background-size: 100% 100%, 46px 46px, 46px 46px;
-  opacity: 0.5;
-  -webkit-mask-image: radial-gradient(130% 100% at 50% 0%, #000 30%, transparent 90%);
-  mask-image: radial-gradient(130% 100% at 50% 0%, #000 30%, transparent 90%);
+  content: none;
 }
 
 ::selection {
-  background: rgb(var(--signal) / 0.35);
+  background: rgb(var(--signal) / 0.28);
   color: rgb(var(--ink));
 }
 
-/* thin instrument scrollbars */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -97,32 +81,32 @@ body::before {
   background: rgb(var(--faint));
 }
 
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-sans);
+}
+
 @layer components {
-  /* uppercase mono micro-labels — the instrument's readouts */
-  .label {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1rem;
+    letter-spacing: 0.01em;
     color: rgb(var(--muted));
   }
 
   .hairline {
     height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgb(var(--line)) 12%,
-      rgb(var(--line)) 88%,
-      transparent
-    );
+    background: rgb(var(--line));
   }
 
   .focusable {
-    @apply outline-none focus-visible:ring-2 focus-visible:ring-signal/70 focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-ink/30 focus-visible:ring-offset-2 focus-visible:ring-offset-bg;
   }
 
-  /* self-contained horizontal scroll (nav on narrow screens) without a visible bar */
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -130,17 +114,73 @@ body::before {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  .panel-shell {
+    @apply rounded-xl border border-line bg-surface/80;
+  }
 }
 
-/* dispatch prose — serif, archival, generous measure */
+/* top-left hero below the navbar */
+.signal-field {
+  background:
+    radial-gradient(
+      90% 85% at 0% 0%,
+      rgb(var(--signal) / 0.35),
+      rgb(var(--signal) / 0.1) 42%,
+      transparent 72%
+    ),
+    radial-gradient(
+      55% 50% at 14% 16%,
+      rgb(255 255 255 / 0.06),
+      transparent 65%
+    );
+  -webkit-mask-image: radial-gradient(
+    120% 115% at 0% 0%,
+    #000 0%,
+    #000 34%,
+    rgba(0, 0, 0, 0.5) 60%,
+    transparent 80%
+  );
+  mask-image: radial-gradient(
+    120% 115% at 0% 0%,
+    #000 0%,
+    #000 34%,
+    rgba(0, 0, 0, 0.5) 60%,
+    transparent 80%
+  );
+}
+
+.signal-field--live {
+  background: none;
+}
+
+:root.light .signal-field {
+  background: radial-gradient(
+    90% 85% at 0% 0%,
+    rgb(var(--signal) / 0.18),
+    rgb(var(--signal) / 0.06) 42%,
+    transparent 72%
+  );
+}
+
+:root.light .signal-field--live {
+  background: none;
+}
+
 .prose-dispatch {
   font-family: var(--font-serif);
   color: rgb(var(--ink));
-  font-size: 1.075rem;
-  line-height: 1.72;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  max-width: 68ch;
+}
+@media (min-width: 640px) {
+  .prose-dispatch {
+    font-size: 1.1875rem;
+  }
 }
 .prose-dispatch > * + * {
-  margin-top: 1.15em;
+  margin-top: 1.35em;
 }
 .prose-dispatch h1,
 .prose-dispatch h2,
@@ -148,14 +188,14 @@ body::before {
   font-family: var(--font-sans);
   font-weight: 600;
   line-height: 1.25;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   margin-top: 1.9em;
 }
 .prose-dispatch h2 {
-  font-size: 1.3rem;
+  font-size: 1.375rem;
 }
 .prose-dispatch h3 {
-  font-size: 1.1rem;
+  font-size: 1.125rem;
 }
 .prose-dispatch a {
   color: rgb(var(--signal));
@@ -167,17 +207,17 @@ body::before {
   font-weight: 600;
 }
 .prose-dispatch em {
-  color: rgb(var(--ember));
+  color: rgb(var(--muted));
   font-style: italic;
 }
 .prose-dispatch blockquote {
-  border-left: 2px solid rgb(var(--ember));
+  border-left: 2px solid rgb(var(--line));
   padding-left: 1.1rem;
   color: rgb(var(--muted));
   font-style: italic;
 }
 .prose-dispatch code {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.85em;
   background: rgb(var(--panel));
   border: 1px solid rgb(var(--line));
@@ -185,7 +225,7 @@ body::before {
   padding: 0.1em 0.35em;
 }
 .prose-dispatch pre {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   background: rgb(var(--surface));
   border: 1px solid rgb(var(--line));
   border-radius: 8px;
@@ -221,4 +261,10 @@ body::before {
   height: 1px;
   background: rgb(var(--line));
   margin: 2em 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

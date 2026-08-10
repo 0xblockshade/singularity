@@ -5,10 +5,13 @@ import { useStatus } from "@/context/StatusContext";
 import { Markdown } from "@/components/Markdown";
 import { SourcesPanel } from "@/components/SourcesPanel";
 import { SampleBadge } from "@/components/SampleBadge";
+import { SignalField } from "@/components/effects/SignalField";
 import { StateBlock } from "@/components/ui/StateBlock";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { formatDate } from "@/lib/utils";
 import type { DispatchDetail } from "@/lib/types";
+
+const PAGE_GUTTERS = "mx-auto max-w-3xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16";
 
 async function loadLatest(): Promise<{ dispatch: DispatchDetail | null; sample: boolean }> {
   const list = await getDispatches(1);
@@ -25,18 +28,30 @@ export default function Today() {
   const { data, error, loading } = useAsyncData(loadLatest, []);
   const { status } = useStatus();
 
-  if (loading) return <TodaySkeleton />;
+  if (loading) {
+    return (
+      <>
+        <SignalField />
+        <div className="relative z-10">
+          <TodaySkeleton />
+        </div>
+      </>
+    );
+  }
 
   if (error) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-        <StateBlock
-          tone="alert"
-          label="Signal lost"
-          title="Could not reach the narrator"
-          body="The dispatch feed is unreachable right now. It will return on its next cycle."
-        />
-      </div>
+      <>
+        <SignalField />
+        <div className={`relative z-10 ${PAGE_GUTTERS}`}>
+          <StateBlock
+            tone="alert"
+            label="Signal lost"
+            title="Could not reach the narrator"
+            body="The dispatch feed is unreachable right now. It will return on its next cycle."
+          />
+        </div>
+      </>
     );
   }
 
@@ -44,53 +59,53 @@ export default function Today() {
 
   if (!dispatch) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-        <StateBlock
-          label="Awaiting first light"
-          title="No dispatch yet"
-          body="The mind has not published. It wakes once a day; the first dispatch will appear here when it does."
-        />
-      </div>
+      <>
+        <SignalField />
+        <div className={`relative z-10 ${PAGE_GUTTERS}`}>
+          <StateBlock
+            label="Awaiting first light"
+            title="No dispatch yet"
+            body="The mind has not published. It wakes once a day; the first dispatch will appear here when it does."
+          />
+        </div>
+      </>
     );
   }
 
   const run = status?.latest_run;
 
   return (
-    <article className="mx-auto max-w-3xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+    <>
+      <SignalField />
+      <article className={`relative z-10 ${PAGE_GUTTERS}`}>
       <header className="animate-fade-up">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="label text-signal">Today&rsquo;s dispatch</span>
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span className="eyebrow">Today&rsquo;s dispatch</span>
           {data?.sample ? <SampleBadge /> : null}
         </div>
 
-        <h1 className="mt-4 font-sans text-3xl font-semibold leading-[1.15] tracking-tight text-ink sm:text-[2.75rem]">
+        <h1 className="mt-5 text-4xl font-semibold leading-[1.08] tracking-[-0.03em] text-ink sm:text-[3.25rem]">
           {dispatch.title}
         </h1>
 
-        <dl className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs text-muted">
+        <dl className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs leading-5 text-muted">
           <div className="flex items-center gap-1.5">
             <dt className="text-faint">by</dt>
             <dd className="text-ink">{dispatch.narrator_name}</dd>
           </div>
-          <span className="h-3 w-px bg-line" aria-hidden="true" />
           <div className="flex items-center gap-1.5">
             <dt className="sr-only">Published</dt>
             <dd>{formatDate(dispatch.published_at)}</dd>
           </div>
-          <span className="h-3 w-px bg-line" aria-hidden="true" />
           <div className="flex items-center gap-1.5">
             <dt className="text-faint">model</dt>
             <dd>{dispatch.model}</dd>
           </div>
           {run && run.output_tokens ? (
-            <>
-              <span className="h-3 w-px bg-line" aria-hidden="true" />
-              <div className="flex items-center gap-1.5 tabular-nums">
-                <dt className="text-faint">out</dt>
-                <dd>{run.output_tokens.toLocaleString()} tok</dd>
-              </div>
-            </>
+            <div className="flex items-center gap-1.5 tabular-nums">
+              <dt className="text-faint">out</dt>
+              <dd>{run.output_tokens.toLocaleString()} tok</dd>
+            </div>
           ) : null}
         </dl>
       </header>
@@ -105,27 +120,28 @@ export default function Today() {
         <SourcesPanel sources={dispatch.sources} />
       </div>
 
-      <nav className="mt-8 flex items-center justify-between font-mono text-xs">
+      <nav className="mt-8 flex items-center justify-between text-sm font-semibold">
         <Link
           to={`/dispatches/${dispatch.id}`}
-          className="focusable rounded-sm text-muted transition-colors hover:text-signal"
+          className="focusable rounded-sm text-muted transition-colors hover:text-ink"
         >
-          permalink →
+          Permalink →
         </Link>
         <Link
           to="/dispatches"
-          className="focusable rounded-sm text-muted transition-colors hover:text-signal"
+          className="focusable rounded-sm text-muted transition-colors hover:text-ink"
         >
-          the full archive →
+          The full archive →
         </Link>
       </nav>
     </article>
+    </>
   );
 }
 
 function TodaySkeleton() {
   return (
-    <div className="mx-auto max-w-3xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+    <div className={PAGE_GUTTERS}>
       <Skeleton className="h-4 w-32" />
       <Skeleton className="mt-4 h-12 w-full" />
       <Skeleton className="mt-2 h-12 w-2/3" />

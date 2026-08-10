@@ -8,6 +8,8 @@ import { StateBlock } from "@/components/ui/StateBlock";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { formatDateTime } from "@/lib/utils";
 
+const PAGE_GUTTERS = "mx-auto max-w-3xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16";
+
 export default function DispatchDetail() {
   const { id } = useParams<{ id: string }>();
   const numericId = Number(id);
@@ -17,12 +19,12 @@ export default function DispatchDetail() {
   );
 
   return (
-    <article className="mx-auto max-w-3xl px-4 pb-16 pt-10 sm:px-6 sm:pt-14">
+    <article className={PAGE_GUTTERS}>
       <Link
         to="/dispatches"
-        className="focusable inline-block rounded-sm font-mono text-xs text-muted transition-colors hover:text-signal"
+        className="focusable inline-block rounded-sm text-sm font-medium text-muted transition-colors hover:text-ink"
       >
-        ← archive
+        ← Archive
       </Link>
 
       {loading ? (
@@ -52,9 +54,9 @@ export default function DispatchDetail() {
           >
             <Link
               to="/dispatches"
-              className="focusable rounded-md border border-line px-4 py-2 font-mono text-xs text-ink transition-colors hover:border-signal hover:text-signal"
+              className="focusable rounded-md border border-line px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-ink/40"
             >
-              back to the archive
+              Back to the archive
             </Link>
           </StateBlock>
         </div>
@@ -62,15 +64,15 @@ export default function DispatchDetail() {
         <>
           <header className="mt-6">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-faint">
-                dispatch #{data.data.id} · run #{data.data.run_id}
+              <span className="text-xs leading-5 text-muted">
+                Dispatch #{data.data.id} · run #{data.data.run_id}
               </span>
               {data.sample ? <SampleBadge /> : null}
             </div>
-            <h1 className="mt-3 font-sans text-3xl font-semibold leading-[1.15] tracking-tight text-ink sm:text-4xl">
+            <h1 className="mt-3 text-4xl font-semibold leading-[1.08] tracking-[-0.025em] text-ink sm:text-5xl">
               {data.data.title}
             </h1>
-            <p className="mt-4 font-mono text-xs text-muted">
+            <p className="mt-4 text-xs leading-5 text-muted">
               <span className="text-ink">{data.data.narrator_name}</span>
               {" · "}
               {formatDateTime(data.data.published_at)}

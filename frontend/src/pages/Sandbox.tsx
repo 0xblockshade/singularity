@@ -2,6 +2,7 @@ import { getImprovements, getSandboxStatus, getSelfModel } from "@/lib/api";
 import { useAsyncData } from "@/hooks/useAsyncData";
 import { LoopDiagram } from "@/components/sandbox/LoopDiagram";
 import { SampleBadge } from "@/components/SampleBadge";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { StateBlock } from "@/components/ui/StateBlock";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { formatDateTime, relativeTime } from "@/lib/utils";
@@ -21,25 +22,23 @@ export default function Sandbox() {
   const facultyCount = status?.faculty_count ?? model?.faculties.length ?? 0;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pt-14">
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div className="max-w-prose">
-          <span className="label text-signal">The sandbox</span>
-          <h1 className="mt-3 font-sans text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-            How it learns to think
-          </h1>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
+    <div className="mx-auto max-w-6xl px-5 pb-20 pt-12 sm:px-8 sm:pt-16">
+      <PageHeader
+        eyebrow="The sandbox"
+        title="How it learns to think"
+        description={
+          <>
             The mind studies AI research and rewrites the analytical methods it thinks with — then
             reads the next day&rsquo;s research through the methods it just sharpened. Knowledge
             improving the intelligence that seeks knowledge. That loop, closed and running, is the
             singularity in miniature.
-          </p>
-        </div>
-        {sample ? <SampleBadge /> : null}
-      </header>
+          </>
+        }
+        aside={sample ? <SampleBadge /> : null}
+      />
 
-      {/* Status strip */}
-      <dl className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {/* Status strip — typographic stats, not cards */}
+      <dl className="mt-10 grid grid-cols-2 gap-y-5 sm:grid-cols-4 sm:divide-x sm:divide-line/70">
         <Stat label="Self-improvements" value={logQ.loading ? null : String(log.length)} />
         <Stat label="Cycles run" value={statusQ.loading ? null : String(cycles)} />
         <Stat label="Faculties" value={statusQ.loading ? null : String(facultyCount)} />
@@ -56,7 +55,7 @@ export default function Sandbox() {
       </dl>
 
       {/* The loop — centerpiece */}
-      <section className="mt-6" aria-label="The recursive self-improvement loop">
+      <section className="mt-8" aria-label="The recursive self-improvement loop">
         <LoopDiagram cycles={cycles} faculties={facultyCount} />
         <p className="mt-3 max-w-prose text-xs leading-relaxed text-faint">
           <span className="text-muted">Honest framing:</span> it rewrites its analytical{" "}
@@ -68,9 +67,9 @@ export default function Sandbox() {
       </section>
 
       {/* Self-model */}
-      <section className="mt-16" aria-label="The self-model">
+      <section className="mt-20" aria-label="The self-model">
         <div className="flex items-baseline gap-3">
-          <span className="label text-signal">Self-model</span>
+          <span className="eyebrow">Self-model</span>
           <h2 className="font-sans text-xl font-semibold tracking-tight text-ink">
             The faculties it thinks with
           </h2>
@@ -79,7 +78,7 @@ export default function Sandbox() {
         {modelQ.loading ? (
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-48 w-full rounded-xl" />
+              <Skeleton key={i} className="h-48 w-full rounded-2xl" />
             ))}
           </div>
         ) : modelQ.error ? (
@@ -102,7 +101,7 @@ export default function Sandbox() {
         ) : (
           <>
             {model.reflection ? (
-              <p className="mt-4 max-w-prose border-l-2 border-ember/50 pl-4 font-serif text-[1.0625rem] leading-relaxed text-ink/90">
+              <p className="mt-4 max-w-prose border-l border-line pl-4 font-serif text-[1.0625rem] leading-relaxed text-ink/90">
                 {model.reflection}
               </p>
             ) : null}
@@ -112,7 +111,7 @@ export default function Sandbox() {
               ))}
             </ul>
             {model.updated_at ? (
-              <p className="mt-4 font-mono text-[0.6875rem] text-faint">
+              <p className="mt-4 text-[0.6875rem] tabular-nums text-faint">
                 self-model v{model.version} · updated {formatDateTime(model.updated_at)}
               </p>
             ) : null}
@@ -121,9 +120,9 @@ export default function Sandbox() {
       </section>
 
       {/* Improvement log */}
-      <section className="mt-16" aria-label="The improvement log">
+      <section className="mt-20" aria-label="The improvement log">
         <div className="flex items-baseline gap-3">
-          <span className="label text-ember">Improvement log</span>
+          <span className="eyebrow">Improvement log</span>
           <h2 className="font-sans text-xl font-semibold tracking-tight text-ink">
             Every self-modification, sourced
           </h2>
@@ -137,7 +136,7 @@ export default function Sandbox() {
           {logQ.loading ? (
             <div className="space-y-4">
               {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-32 w-full rounded-xl" />
+                <Skeleton key={i} className="h-32 w-full rounded-2xl" />
               ))}
             </div>
           ) : logQ.error ? (
@@ -156,7 +155,7 @@ export default function Sandbox() {
           ) : (
             <ol className="relative flex flex-col gap-0">
               <span
-                className="absolute left-[7px] top-2 h-[calc(100%-1rem)] w-px bg-line"
+                className="absolute left-[7px] top-2 h-[calc(100%-1rem)] w-px bg-line/70"
                 aria-hidden="true"
               />
               {log.map((entry) => (
@@ -172,9 +171,9 @@ export default function Sandbox() {
 
 function Stat({ label, value }: { label: string; value: string | null }) {
   return (
-    <div className="rounded-xl border border-line bg-surface/40 px-4 py-3">
-      <dt className="label text-[0.625rem]">{label}</dt>
-      <dd className="mt-1 font-mono text-xl font-semibold tabular-nums text-ink">
+    <div className="sm:px-5 first:sm:pl-0 last:sm:pr-0">
+      <dt className="eyebrow">{label}</dt>
+      <dd className="mt-1 font-sans text-xl font-semibold tabular-nums text-ink">
         {value ?? <Skeleton className="h-6 w-12" />}
       </dd>
     </div>
@@ -184,33 +183,20 @@ function Stat({ label, value }: { label: string; value: string | null }) {
 function FacultyCard({ faculty }: { faculty: Faculty }) {
   const { name, current_method, times_revised, first_cycle, last_cycle } = faculty;
   return (
-    <li className="flex flex-col rounded-xl border border-line bg-surface/50 p-5 transition-colors hover:border-signal/40">
+    <li className="panel-shell flex flex-col p-5 transition-colors hover:border-ink/20 sm:p-6">
       <div className="flex items-start justify-between gap-3">
         <h3 className="font-sans text-base font-semibold leading-snug text-ink">{name}</h3>
         <span
-          className="shrink-0 rounded-full border border-signal/30 bg-signal/10 px-2 py-0.5 font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-signal"
+          className="shrink-0 text-xs tabular-nums text-faint"
           title={`Revised ${times_revised} time${times_revised === 1 ? "" : "s"}`}
         >
           rev ×{times_revised}
         </span>
       </div>
 
-      {/* revision "growth" ticks */}
-      <div className="mt-3 flex items-center gap-1" aria-hidden="true">
-        {Array.from({ length: Math.max(times_revised, 1) }).map((_, i) => (
-          <span
-            key={i}
-            className={
-              "h-1 flex-1 rounded-full " +
-              (times_revised === 0 ? "bg-line" : "bg-signal/70")
-            }
-          />
-        ))}
-      </div>
-
       <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{current_method}</p>
 
-      <p className="mt-4 border-t border-line pt-3 font-mono text-[0.625rem] text-faint">
+      <p className="mt-4 border-t border-line/70 pt-3 text-[0.6875rem] tabular-nums text-faint">
         cycle {first_cycle}
         {last_cycle !== first_cycle ? ` → ${last_cycle}` : ""}
       </p>
@@ -222,41 +208,34 @@ function ImprovementEntry({ entry }: { entry: Improvement }) {
   return (
     <li className="relative pb-6 pl-7">
       <span
-        className="absolute left-1 top-1.5 h-3.5 w-3.5 rounded-full border-2 border-ember bg-surface"
+        className="absolute left-1.5 top-2 h-2 w-2 rounded-full bg-ink"
         aria-hidden="true"
       />
-      <div className="rounded-xl border border-line bg-surface/50 p-5">
+      <div className="panel-shell p-5 sm:p-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span className="rounded-full border border-ember/30 bg-ember/10 px-2 py-0.5 font-mono text-[0.5625rem] uppercase tracking-[0.14em] text-ember">
-            {entry.change}
-          </span>
+          <span className="text-xs text-muted">{entry.change}</span>
           <h3 className="font-sans text-base font-semibold text-ink">{entry.faculty}</h3>
-          <span className="font-mono text-[0.6875rem] text-faint">
+          <span className="text-[0.6875rem] tabular-nums text-faint">
             cycle {entry.cycle} · run #{entry.run_id} · {relativeTime(entry.created_at)}
           </span>
         </div>
 
-        <p className="mt-3 border-l-2 border-signal/40 pl-4 font-mono text-[0.8125rem] leading-relaxed text-ink/90">
+        <p className="mt-3 border-l border-line pl-4 text-sm leading-relaxed text-ink/90">
           {entry.detail}
         </p>
 
         <p className="mt-3 text-sm leading-relaxed text-muted">{entry.rationale}</p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-line pt-3">
-          <span className="font-mono text-[0.625rem] uppercase tracking-[0.14em] text-faint">
-            cited research
-          </span>
+        <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-line pt-3">
+          <span className="text-xs text-faint">Cited research</span>
           {entry.cited_signals.length > 0 ? (
             entry.cited_signals.map((id) => (
-              <code
-                key={id}
-                className="inline-flex items-center rounded-full bg-signal/10 px-2 py-0.5 font-mono text-[0.625rem] text-signal"
-              >
+              <code key={id} className="text-xs tabular-nums text-muted">
                 signal #{id}
               </code>
             ))
           ) : (
-            <span className="font-mono text-[0.625rem] text-faint">none recorded</span>
+            <span className="text-xs text-faint">none recorded</span>
           )}
         </div>
       </div>
