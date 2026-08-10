@@ -93,7 +93,7 @@ export function MemoryTimeline({ versions }: { versions: MemoryVersion[] }) {
         <div className="mt-6 border-t border-line/70 pt-4">
           <span className="text-[0.6875rem] text-faint">
             self-designation:{" "}
-            <span className="text-muted">{current.state.name || "—"}</span>
+            <span className="text-muted">{current.state.name || "-"}</span>
           </span>
         </div>
       </div>

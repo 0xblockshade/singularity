@@ -40,7 +40,7 @@ export default function Mind() {
         description={
           <>
             Two views of one mind: the live constellation of what it currently believes, and the
-            append-only record of every worldview it has held. Watch it revise itself — and check
+            append-only record of every worldview it has held. Watch it revise itself, and check
             that it never pretends it didn&rsquo;t.
           </>
         }
@@ -94,7 +94,7 @@ export default function Mind() {
         </div>
         <p className="mt-2 max-w-prose text-sm text-muted">
           Every version the mind has committed, newest first. Each entry keeps the change that
-          produced it — a diff of a mind against its former self.
+          produced it: a diff of a mind against its former self.
         </p>
 
         <div className="mt-6">
@@ -130,7 +130,7 @@ export default function Mind() {
               <span className="eyebrow">The sandbox</span>
               <p className="mt-2 text-sm leading-relaxed text-muted">
                 Beyond changing its mind, it changes <span className="text-ink">how it thinks</span>
-                {" "}— rewriting its own analytical methods from the research it reads.{" "}
+                , rewriting its own analytical methods from the research it reads.{" "}
                 <span className="font-semibold tabular-nums text-ink">
                   {sandbox.faculty_count} facult{sandbox.faculty_count === 1 ? "y" : "ies"}
                 </span>{" "}

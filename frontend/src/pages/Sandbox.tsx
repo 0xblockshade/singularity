@@ -28,7 +28,7 @@ export default function Sandbox() {
         title="How it learns to think"
         description={
           <>
-            The mind studies AI research and rewrites the analytical methods it thinks with — then
+            The mind studies AI research and rewrites the analytical methods it thinks with, then
             reads the next day&rsquo;s research through the methods it just sharpened. Knowledge
             improving the intelligence that seeks knowledge. That loop, closed and running, is the
             singularity in miniature.
@@ -37,7 +37,7 @@ export default function Sandbox() {
         aside={sample ? <SampleBadge /> : null}
       />
 
-      {/* Status strip — typographic stats, not cards */}
+      {/* Status strip, typographic stats, not cards */}
       <dl className="mt-10 grid grid-cols-2 gap-y-5 sm:grid-cols-4 sm:divide-x sm:divide-line/70">
         <Stat label="Self-improvements" value={logQ.loading ? null : String(log.length)} />
         <Stat label="Cycles run" value={statusQ.loading ? null : String(cycles)} />
@@ -49,18 +49,18 @@ export default function Sandbox() {
               ? null
               : status?.latest_cycle_at
                 ? relativeTime(status.latest_cycle_at)
-                : "—"
+                : "-"
           }
         />
       </dl>
 
-      {/* The loop — centerpiece */}
+      {/* The loop, centerpiece */}
       <section className="mt-8" aria-label="The recursive self-improvement loop">
         <LoopDiagram cycles={cycles} faculties={facultyCount} />
         <p className="mt-3 max-w-prose text-xs leading-relaxed text-faint">
           <span className="text-muted">Honest framing:</span> it rewrites its analytical{" "}
-          <span className="text-ink">methods</span> — how it triages signals, calibrates confidence,
-          weighs a source — <span className="text-ink">not its weights</span>. The model underneath
+          <span className="text-ink">methods</span> (how it triages signals, calibrates confidence,
+          weighs a source), <span className="text-ink">not its weights</span>. The model underneath
           is fixed. What changes is how the mind chooses to use it, and every change below is
           traceable to the research that prompted it.
         </p>
@@ -112,7 +112,7 @@ export default function Sandbox() {
             </ul>
             {model.updated_at ? (
               <p className="mt-4 text-[0.6875rem] tabular-nums text-faint">
-                self-model v{model.version} · updated {formatDateTime(model.updated_at)}
+                self-model v{model.version} Â· updated {formatDateTime(model.updated_at)}
               </p>
             ) : null}
           </>
@@ -128,7 +128,7 @@ export default function Sandbox() {
           </h2>
         </div>
         <p className="mt-2 max-w-prose text-sm text-muted">
-          Newest first. Each change traces to the research that caused it — an upgrade with no cited
+          Newest first. Each change traces to the research that caused it, an upgrade with no cited
           paper is an upgrade that never happened.
         </p>
 
@@ -190,7 +190,7 @@ function FacultyCard({ faculty }: { faculty: Faculty }) {
           className="shrink-0 text-xs tabular-nums text-faint"
           title={`Revised ${times_revised} time${times_revised === 1 ? "" : "s"}`}
         >
-          rev ×{times_revised}
+          rev Ã{times_revised}
         </span>
       </div>
 
@@ -198,7 +198,7 @@ function FacultyCard({ faculty }: { faculty: Faculty }) {
 
       <p className="mt-4 border-t border-line/70 pt-3 text-[0.6875rem] tabular-nums text-faint">
         cycle {first_cycle}
-        {last_cycle !== first_cycle ? ` → ${last_cycle}` : ""}
+        {last_cycle !== first_cycle ? ` â†’ ${last_cycle}` : ""}
       </p>
     </li>
   );
@@ -216,7 +216,7 @@ function ImprovementEntry({ entry }: { entry: Improvement }) {
           <span className="text-xs text-muted">{entry.change}</span>
           <h3 className="font-sans text-base font-semibold text-ink">{entry.faculty}</h3>
           <span className="text-[0.6875rem] tabular-nums text-faint">
-            cycle {entry.cycle} · run #{entry.run_id} · {relativeTime(entry.created_at)}
+            cycle {entry.cycle} Â· run #{entry.run_id} Â· {relativeTime(entry.created_at)}
           </span>
         </div>
 

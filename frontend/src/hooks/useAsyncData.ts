@@ -10,7 +10,7 @@ export interface AsyncState<T> {
 /**
  * Fetch-on-mount with a stable refetch. Keeps previous data visible while a
  * refetch is in flight (no flicker back to a spinner). `deps` re-runs the
- * fetch when they change — used to refetch a dispatch by :id on route change.
+ * fetch when they change, used to refetch a dispatch by :id on route change.
  */
 export function useAsyncData<T>(
   fn: () => Promise<T>,

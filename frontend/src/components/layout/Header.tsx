@@ -71,7 +71,7 @@ export function Header() {
           role="status"
         >
           <span className="text-xs text-muted">
-            Kill switch active — the mind is dormant
+            Kill switch active. The mind is dormant.
           </span>
         </div>
       ) : null}

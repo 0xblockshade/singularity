@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-/** Shared empty/error scaffold — a quiet instrument readout, not an alarm. */
+/** Shared empty/error scaffold, a quiet instrument readout, not an alarm. */
 export function StateBlock({
   label,
   title,

@@ -72,7 +72,7 @@ export interface TransmissionReceipt {
 
 // --- Sandbox: recursive self-improvement -------------------------------------
 // The agent studies AI research and rewrites its own analytical *faculties*
-// (named methods/heuristics) — not its weights. Every change is sourced.
+// (named methods/heuristics), not its weights. Every change is sourced.
 
 export interface Improvement {
   id: number;

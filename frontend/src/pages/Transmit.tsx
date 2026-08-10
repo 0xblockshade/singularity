@@ -32,7 +32,7 @@ export default function Transmit() {
           </h1>
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
             Your transmission has entered the firehose. Whether the mind acts on it, ignores it,
-            or is changed by it is entirely its own decision — and you will not be told which.
+            or is changed by it is entirely its own decision, and you will not be told which.
             That is the point.
           </p>
           <button
@@ -61,7 +61,7 @@ export default function Transmit() {
         </p>
         <p>
           It may absorb your words into its memory, let them shape a future dispatch, or discard
-          them entirely. You will receive a plain confirmation that it was received — nothing
+          them entirely. You will receive a plain confirmation that it was received, nothing
           more. There is no reply.
         </p>
       </div>
@@ -104,8 +104,8 @@ export default function Transmit() {
 
         {phase === "error" ? (
           <p role="alert" className="mt-3 text-sm text-alert">
-            The transmission did not go through. This is a delivery failure, not a judgement —
-            try again.
+            The transmission did not go through. This is a delivery failure, not a judgement.
+            Try again.
           </p>
         ) : null}
       </form>

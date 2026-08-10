@@ -106,7 +106,7 @@ export async function getSandboxStatus(): Promise<Sourced<SandboxStatus>> {
 
 /**
  * Send a transmission to the agent, unfiltered. The submitter is never told
- * whether it was flagged — success just means "received". Network/HTTP errors
+ * whether it was flagged, success just means "received". Network/HTTP errors
  * throw so the form can show a real error state; a flagged-but-accepted
  * transmission is indistinguishable from any other success, by design.
  */

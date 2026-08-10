@@ -34,7 +34,7 @@ const STAGES = [
 
 /**
  * Minimal loop diagram: three nodes on a ring, hairline path, return mark.
- * Static SVG — no particles, glow, or pulse.
+ * Static SVG, no particles, glow, or pulse.
  */
 export function LoopDiagram({ cycles, faculties }: { cycles: number; faculties: number }) {
   return (

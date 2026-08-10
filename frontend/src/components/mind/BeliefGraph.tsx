@@ -17,7 +17,7 @@ function readVar(name: string, fallback: string): string {
   return v || fallback;
 }
 
-/** Color tokens are stored as "R G B" channels — wrap for canvas. */
+/** Color tokens are stored as "R G B" channels, wrap for canvas. */
 function readColor(name: string, channels: string, alpha = 1): string {
   return `rgb(${readVar(name, channels)}${alpha === 1 ? "" : ` / ${alpha}`})`;
 }

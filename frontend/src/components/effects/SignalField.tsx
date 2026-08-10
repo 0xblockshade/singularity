@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Top-left landing hero — soft color bends + threads.
+ * Top-left landing hero, soft color bends + threads.
  * Always paints a CSS fallback; WebGL layers on top when available.
  */
 const VERT = `

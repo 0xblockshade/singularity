@@ -29,7 +29,7 @@ export function formatDateTime(iso: string): string {
   return `${DATE_FMT.format(d)} · ${TIME_FMT.format(d)} UTC`;
 }
 
-/** e.g. "3 days ago", "just now" — for the archival log feel. */
+/** e.g. "3 days ago", "just now", for the archival log feel. */
 export function relativeTime(iso: string): string {
   const d = new Date(iso).getTime();
   if (Number.isNaN(d)) return iso;
