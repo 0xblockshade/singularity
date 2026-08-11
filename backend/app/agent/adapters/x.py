@@ -1,9 +1,9 @@
 """X / Twitter social-pulse adapter — ToS-gray, fully key-gated.
 
 Accessing X programmatically needs a paid API or a third-party provider, and the terms are
-a moving target. So this adapter is a stub behind `SINGULARITY_X_KEY`: with no key it logs a
+a moving target. So this adapter is a stub behind `INFINITUM_X_KEY`: with no key it logs a
 skip and returns `[]`. The HTTP scaffold is here so a real provider drops in without touching
-the scanner — point `SINGULARITY_X_API_URL` at it and parse the response below.
+the scanner — point `INFINITUM_X_API_URL` at it and parse the response below.
 """
 import logging
 from typing import List
@@ -20,12 +20,12 @@ class XAdapter:
     def fetch(self) -> List[SignalItem]:
         key = config.X_KEY
         if not key:
-            log.info("x adapter: no SINGULARITY_X_KEY set — skipping (ToS-gray, opt-in only)")
+            log.info("x adapter: no INFINITUM_X_KEY set — skipping (ToS-gray, opt-in only)")
             return []
 
         endpoint = config.X_API_URL
         if not endpoint:
-            log.info("x adapter: key present but no SINGULARITY_X_API_URL configured — skipping")
+            log.info("x adapter: key present but no INFINITUM_X_API_URL configured — skipping")
             return []
 
         import httpx

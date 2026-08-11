@@ -29,9 +29,9 @@ def test_format_plain_and_with_link(monkeypatch):
     long_title = "x" * 400
     assert len(publish.format_dispatch_for_x(long_title, 1)) <= publish.TWEET_LIMIT
 
-    monkeypatch.setattr(config, "PUBLIC_URL", "https://singularity.example")
+    monkeypatch.setattr(config, "PUBLIC_URL", "https://infinitum.example")
     text = publish.format_dispatch_for_x("Day One", 7)
-    assert "https://singularity.example/dispatches/7" in text
+    assert "https://infinitum.example/dispatches/7" in text
     assert text.startswith("Day One")
 
 

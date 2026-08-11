@@ -81,7 +81,7 @@ def test_kill_switch_halts_sandbox(conn):
 
 
 def _client(tmp_path):
-    os.environ["SINGULARITY_DB"] = str(tmp_path / "sandbox_api.db")
+    os.environ["INFINITUM_DB"] = str(tmp_path / "sandbox_api.db")
     from app import config as config_module
     importlib.reload(config_module)
     from app import main as main_module

@@ -38,9 +38,9 @@ def main():
 
     sub.add_parser("scan")
 
-    p_pub = sub.add_parser("publish", help="post a dispatch to X (needs X_* tokens + --force or SINGULARITY_PUBLISH_X)")
+    p_pub = sub.add_parser("publish", help="post a dispatch to X (needs X_* tokens + --force or INFINITUM_PUBLISH_X)")
     p_pub.add_argument("--dispatch", type=int, help="dispatch id to post (default: latest)")
-    p_pub.add_argument("--force", action="store_true", help="post even if SINGULARITY_PUBLISH_X is off")
+    p_pub.add_argument("--force", action="store_true", help="post even if INFINITUM_PUBLISH_X is off")
 
     args = ap.parse_args()
     conn = db.connect()
@@ -90,7 +90,7 @@ def main():
             # --force lets you post manually without turning on autonomous syndication.
             publisher = publish.XPublisher() if (config.PUBLISH_X or args.force) else None
             if publisher is None:
-                print("X publishing is off. Re-run with --force, or set SINGULARITY_PUBLISH_X=1.")
+                print("X publishing is off. Re-run with --force, or set INFINITUM_PUBLISH_X=1.")
             else:
                 result = publish.publish_dispatch(conn, d["id"], d["title"], publisher=publisher)
                 print(json.dumps(result, indent=2))

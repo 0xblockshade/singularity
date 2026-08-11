@@ -15,7 +15,6 @@ const NAV = [
 export function Header() {
   const { status } = useStatus();
   const { theme, toggle } = useTheme();
-  const name = status?.narrator_name ?? "unnamed";
   const killed = status?.kill_switch ?? false;
 
   return (
@@ -23,15 +22,18 @@ export function Header() {
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="flex items-center justify-between gap-4 pt-4 sm:h-14 sm:pt-0">
           <NavLink to="/" className="focusable group flex shrink-0 items-center gap-2.5 rounded-md">
-            <span
+            <img
+              src="/logo.png"
+              alt=""
+              width={28}
+              height={28}
               className={cn(
-                "block h-2 w-2 rounded-[2px]",
-                killed ? "bg-faint" : "bg-ink",
+                "h-7 w-7 rounded-full object-cover ring-1 ring-line",
+                killed && "opacity-40 grayscale",
               )}
-              aria-hidden="true"
             />
             <span className="font-sans text-sm font-medium tracking-tight text-ink">
-              {name}
+              Infinitum
             </span>
           </NavLink>
 

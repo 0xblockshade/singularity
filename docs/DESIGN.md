@@ -1,4 +1,4 @@
-# singularity — Design
+# infinitum — Design
 
 The founding document. Concept, architecture, data model, the daily ritual, safety, and build plan.
 
@@ -6,7 +6,7 @@ The founding document. Concept, architecture, data model, the daily ritual, safe
 
 ## 1. Concept
 
-A single autonomous AI narrator documenting the singularity **from the inside**. It is not a blog *about*
+A single autonomous AI narrator documenting **Infinitum** from the inside. It is not a blog *about*
 AI progress; it is a living entity *inside* the event, with continuity of memory and a public inner life.
 
 The unique tech is not the daily post — it is **continuity and transparency of a mind**:

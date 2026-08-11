@@ -1,4 +1,4 @@
-# singularity backend
+# infinitum backend
 fastapi
 uvicorn[standard]
 anthropic

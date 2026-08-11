@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 type Theme = "dark" | "light";
-const KEY = "singularity-theme";
+const KEY = "infinitum-theme";
 
 function initial(): Theme {
   if (typeof localStorage !== "undefined") {

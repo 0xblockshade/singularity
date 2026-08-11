@@ -7,10 +7,10 @@ publishes. This module only decides *when* to wake and *how* to build the narrat
 Two ways to run it:
 
   * In-process — FastAPI starts `build_scheduler()` on boot when
-    ``SINGULARITY_ENABLE_SCHEDULER`` is truthy (one always-on machine does API + wake).
+    ``INFINITUM_ENABLE_SCHEDULER`` is truthy (one always-on machine does API + wake).
   * Standalone — ``python -m app.scheduler`` runs a blocking scheduler as its own worker
     process. ``python -m app.scheduler --now`` fires a single wake and exits (cron-style
-    deploys, and CI wiring checks with ``SINGULARITY_FAKE=1``).
+    deploys, and CI wiring checks with ``INFINITUM_FAKE=1``).
 
 Every env var this module reads is read here directly, with a safe default.
 """
@@ -23,7 +23,7 @@ from apscheduler.triggers.cron import CronTrigger
 from . import db
 from .agent import ritual
 
-log = logging.getLogger("singularity.scheduler")
+log = logging.getLogger("infinitum.scheduler")
 
 JOB_ID = "daily-wake"
 
@@ -34,20 +34,20 @@ def _truthy(val: str) -> bool:
 
 def _wake_hour() -> int:
     try:
-        return int(os.environ.get("SINGULARITY_WAKE_HOUR", "9"))
+        return int(os.environ.get("INFINITUM_WAKE_HOUR", "9"))
     except ValueError:
-        log.warning("SINGULARITY_WAKE_HOUR is not an int; falling back to 9")
+        log.warning("INFINITUM_WAKE_HOUR is not an int; falling back to 9")
         return 9
 
 
 def _timezone() -> str:
-    return os.environ.get("SINGULARITY_TZ", "UTC")
+    return os.environ.get("INFINITUM_TZ", "UTC")
 
 
 def _jitter() -> int:
     """Optional +/- seconds of randomised delay so the wake isn't a perfectly sharp edge."""
     try:
-        return int(os.environ.get("SINGULARITY_WAKE_JITTER", "0"))
+        return int(os.environ.get("INFINITUM_WAKE_JITTER", "0"))
     except ValueError:
         return 0
 
@@ -55,14 +55,14 @@ def _jitter() -> int:
 def _build_narrator():
     """Pick the narrator for a wake.
 
-    ``SINGULARITY_FAKE=1`` forces the deterministic FakeNarrator (no network, no key) —
+    ``INFINITUM_FAKE=1`` forces the deterministic FakeNarrator (no network, no key) —
     used for wiring checks and dry runs. Otherwise we need ``ANTHROPIC_API_KEY``; if it's
     missing we return None so `wake()` can skip cleanly instead of crashing the process.
     """
-    if _truthy(os.environ.get("SINGULARITY_FAKE", "")):
+    if _truthy(os.environ.get("INFINITUM_FAKE", "")):
         from .agent.client import FakeNarrator
 
-        log.info("SINGULARITY_FAKE set — using FakeNarrator for this wake")
+        log.info("INFINITUM_FAKE set — using FakeNarrator for this wake")
         return FakeNarrator()
 
     if not os.environ.get("ANTHROPIC_API_KEY"):
@@ -89,7 +89,7 @@ def wake(narrator=None) -> dict:
 
         conn = db.connect()
         db.init_db(conn)  # CREATE IF NOT EXISTS — safe, and covers a fresh volume
-        model_name = os.environ.get("SINGULARITY_NARRATOR_MODEL") or None
+        model_name = os.environ.get("INFINITUM_NARRATOR_MODEL") or None
         result = ritual.run_ritual(conn, narrator, model_name=model_name)
         log.info("wake: ritual finished: %s", result)
         return result
@@ -133,11 +133,11 @@ def main(argv=None) -> int:
     import argparse
 
     logging.basicConfig(
-        level=os.environ.get("SINGULARITY_LOG_LEVEL", "INFO"),
+        level=os.environ.get("INFINITUM_LOG_LEVEL", "INFO"),
         format="%(asctime)s %(levelname)s %(name)s %(message)s",
     )
 
-    parser = argparse.ArgumentParser(description="singularity daily-wake scheduler")
+    parser = argparse.ArgumentParser(description="Infinitum daily-wake scheduler")
     parser.add_argument(
         "--now",
         action="store_true",

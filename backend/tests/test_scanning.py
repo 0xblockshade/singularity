@@ -53,7 +53,7 @@ def test_run_adapters_records_then_dedupes(conn, monkeypatch):
 
 
 def test_gather_signals_offline_makes_no_network_call(conn, monkeypatch):
-    monkeypatch.delenv("SINGULARITY_LIVE_SCAN", raising=False)
+    monkeypatch.delenv("INFINITUM_LIVE_SCAN", raising=False)
 
     def explode():
         raise AssertionError("adapters must not run when live scan is off")
@@ -70,7 +70,7 @@ def test_gather_signals_offline_makes_no_network_call(conn, monkeypatch):
 
 
 def test_gather_signals_live_triggers_scan(conn, monkeypatch):
-    monkeypatch.setenv("SINGULARITY_LIVE_SCAN", "1")
+    monkeypatch.setenv("INFINITUM_LIVE_SCAN", "1")
     items = [SignalItem("fake", "http://live", "live AGI item", "z")]
     monkeypatch.setattr(scanning, "enabled_adapters", lambda: [FakeAdapter("fake", items)])
 

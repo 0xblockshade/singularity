@@ -9,8 +9,8 @@ from app.agent.client import FakeNarrator
 
 
 def test_build_scheduler_has_one_daily_job(monkeypatch):
-    monkeypatch.setenv("SINGULARITY_WAKE_HOUR", "7")
-    monkeypatch.setenv("SINGULARITY_TZ", "UTC")
+    monkeypatch.setenv("INFINITUM_WAKE_HOUR", "7")
+    monkeypatch.setenv("INFINITUM_TZ", "UTC")
 
     # build_scheduler configures but does not start — jobs are pending, no shutdown needed.
     sched = scheduler.build_scheduler()
@@ -31,7 +31,7 @@ def test_build_scheduler_has_one_daily_job(monkeypatch):
 
 
 def test_wake_runs_full_ritual_and_publishes(tmp_path, monkeypatch):
-    monkeypatch.setenv("SINGULARITY_DB", str(tmp_path / "wake.db"))
+    monkeypatch.setenv("INFINITUM_DB", str(tmp_path / "wake.db"))
     # Reload config so DB_PATH picks up the temp path, and db so it reads the reloaded config.
     from app import config as config_module
     from app import db as db_module
@@ -58,9 +58,9 @@ def test_wake_runs_full_ritual_and_publishes(tmp_path, monkeypatch):
 
 
 def test_wake_via_fake_env(tmp_path, monkeypatch):
-    """SINGULARITY_FAKE=1 builds a FakeNarrator internally — no key, no network."""
-    monkeypatch.setenv("SINGULARITY_DB", str(tmp_path / "fakeenv.db"))
-    monkeypatch.setenv("SINGULARITY_FAKE", "1")
+    """INFINITUM_FAKE=1 builds a FakeNarrator internally — no key, no network."""
+    monkeypatch.setenv("INFINITUM_DB", str(tmp_path / "fakeenv.db"))
+    monkeypatch.setenv("INFINITUM_FAKE", "1")
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
 
     from app import config as config_module
@@ -76,8 +76,8 @@ def test_wake_via_fake_env(tmp_path, monkeypatch):
 
 def test_wake_skips_cleanly_without_key(tmp_path, monkeypatch):
     """No FakeNarrator, no ANTHROPIC_API_KEY → skip, never crash."""
-    monkeypatch.setenv("SINGULARITY_DB", str(tmp_path / "nokey.db"))
-    monkeypatch.delenv("SINGULARITY_FAKE", raising=False)
+    monkeypatch.setenv("INFINITUM_DB", str(tmp_path / "nokey.db"))
+    monkeypatch.delenv("INFINITUM_FAKE", raising=False)
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
 
     from app import config as config_module
@@ -108,8 +108,8 @@ def test_wake_never_raises_on_failure(monkeypatch):
 def test_app_startup_without_flag_starts_no_scheduler(tmp_path, monkeypatch):
     from fastapi.testclient import TestClient
 
-    monkeypatch.setenv("SINGULARITY_DB", str(tmp_path / "app.db"))
-    monkeypatch.delenv("SINGULARITY_ENABLE_SCHEDULER", raising=False)
+    monkeypatch.setenv("INFINITUM_DB", str(tmp_path / "app.db"))
+    monkeypatch.delenv("INFINITUM_ENABLE_SCHEDULER", raising=False)
 
     from app import config as config_module
     from app import main as main_module
@@ -127,8 +127,8 @@ def test_app_startup_without_flag_starts_no_scheduler(tmp_path, monkeypatch):
 def test_app_startup_with_flag_starts_scheduler(tmp_path, monkeypatch):
     from fastapi.testclient import TestClient
 
-    monkeypatch.setenv("SINGULARITY_DB", str(tmp_path / "app2.db"))
-    monkeypatch.setenv("SINGULARITY_ENABLE_SCHEDULER", "true")
+    monkeypatch.setenv("INFINITUM_DB", str(tmp_path / "app2.db"))
+    monkeypatch.setenv("INFINITUM_ENABLE_SCHEDULER", "true")
 
     from app import config as config_module
     from app import main as main_module

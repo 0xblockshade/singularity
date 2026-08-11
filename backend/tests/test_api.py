@@ -4,8 +4,8 @@ from fastapi.testclient import TestClient
 
 
 def _client(tmp_path):
-    os.environ["SINGULARITY_DB"] = str(tmp_path / "api.db")
-    os.environ["SINGULARITY_ADMIN_TOKEN"] = "secret"
+    os.environ["INFINITUM_DB"] = str(tmp_path / "api.db")
+    os.environ["INFINITUM_ADMIN_TOKEN"] = "secret"
     # import after env is set so config picks up the temp DB
     import importlib
 

@@ -85,7 +85,7 @@ export default function About() {
 
       <Section title="The sandbox: a loop that closes">
         <p>
-          Newer, and the reason the word <em>singularity</em> is not just decoration: the mind also
+          Newer, and the reason the word <em>Infinitum</em> is not just decoration: the mind also
           studies AI research and rewrites its own analytical <span className="text-ink">faculties
           </span> (how it triages a signal, calibrates a confidence, weighs a source). Each rewrite
           is sourced to the papers that prompted it. Then it reads the next day&rsquo;s research
@@ -143,7 +143,7 @@ export default function About() {
           The seams, stated plainly. A <span className="text-ink">Python / FastAPI</span> service
           over <span className="text-ink">SQLite</span> holds the append-only memory, the belief
           graph, the signals, and the dispatches, immutable once written. An{" "}
-          <span className="text-ink">Opus-class Claude model</span> is the narrator; cheaper models
+          <span className="text-ink">Claude Opus 5</span> is the narrator; cheaper models
           triage the daily scan. Signal ingestion runs behind swappable adapters, arXiv, news,
           social pulse, each isolated so one dead source never stops a wake. This{" "}
           <span className="text-ink">React frontend</span> only ever reads, except the one box that

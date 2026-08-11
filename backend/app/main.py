@@ -14,9 +14,9 @@ from pydantic import BaseModel
 
 from . import config, db, repo
 
-log = logging.getLogger("singularity.main")
+log = logging.getLogger("infinitum.main")
 
-ADMIN_TOKEN = os.environ.get("SINGULARITY_ADMIN_TOKEN", "")
+ADMIN_TOKEN = os.environ.get("INFINITUM_ADMIN_TOKEN", "")
 
 
 def _ensure_db():
@@ -29,7 +29,7 @@ _ensure_db()  # schema is CREATE IF NOT EXISTS — safe on every import/boot
 
 
 def _scheduler_enabled() -> bool:
-    return os.environ.get("SINGULARITY_ENABLE_SCHEDULER", "").strip().lower() in {
+    return os.environ.get("INFINITUM_ENABLE_SCHEDULER", "").strip().lower() in {
         "1",
         "true",
         "yes",
@@ -42,7 +42,7 @@ async def lifespan(app: FastAPI):
     """Start the daily-wake scheduler in-process only when explicitly enabled.
 
     Default is OFF so tests and API-only deploys never spawn a scheduler. The always-on
-    Fly/Railway machine sets SINGULARITY_ENABLE_SCHEDULER=true to run API + wake together.
+    Fly/Railway machine sets INFINITUM_ENABLE_SCHEDULER=true to run API + wake together.
     """
     scheduler = None
     if _scheduler_enabled():
@@ -54,7 +54,7 @@ async def lifespan(app: FastAPI):
         log.info("in-process daily-wake scheduler started")
     else:
         app.state.scheduler = None
-        log.info("scheduler disabled (SINGULARITY_ENABLE_SCHEDULER not set)")
+        log.info("scheduler disabled (INFINITUM_ENABLE_SCHEDULER not set)")
     try:
         yield
     finally:
@@ -64,8 +64,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="singularity",
-    description="An autonomous AI narrator documenting the singularity from the inside.",
+    title="Infinitum",
+    description="An autonomous AI narrator documenting Infinitum from the inside.",
     lifespan=lifespan,
 )
 

@@ -1,4 +1,4 @@
-# Fly.io config for the singularity backend — one small always-on machine running the
+# Fly.io config for the Infinitum backend — one small always-on machine running the
 # API *and* the in-process daily-wake scheduler. Rename `app` before first deploy.
 #
 # Build context is the backend/ directory (that's where the Dockerfile + .dockerignore
@@ -8,7 +8,7 @@
 #
 # so Fly uses backend/ as the context and backend/Dockerfile as the image.
 
-app = "singularity-narrator"
+app = "infinitum-narrator"
 primary_region = "iad"
 
 [build]
@@ -16,19 +16,19 @@ primary_region = "iad"
 
 [env]
   PORT = "8000"
-  SINGULARITY_DATA = "/data"
-  SINGULARITY_DB = "/data/singularity.db"
+  INFINITUM_DATA = "/data"
+  INFINITUM_DB = "/data/infinitum.db"
   # Autonomy on: this machine wakes the narrator once a day in-process.
-  SINGULARITY_ENABLE_SCHEDULER = "true"
-  SINGULARITY_WAKE_HOUR = "9"
-  SINGULARITY_TZ = "UTC"
-  # Secrets (ANTHROPIC_API_KEY, SINGULARITY_ADMIN_TOKEN) are NOT set here —
+  INFINITUM_ENABLE_SCHEDULER = "true"
+  INFINITUM_WAKE_HOUR = "9"
+  INFINITUM_TZ = "UTC"
+  # Secrets (ANTHROPIC_API_KEY, INFINITUM_ADMIN_TOKEN) are NOT set here —
   # set them with `fly secrets set ...`.
 
 # Persistent volume for the SQLite DB (WAL). Create once:
-#   fly volumes create singularity_data --size 1 --region iad
+#   fly volumes create infinitum_data --size 1 --region iad
 [mounts]
-  source = "singularity_data"
+  source = "infinitum_data"
   destination = "/data"
 
 [http_service]

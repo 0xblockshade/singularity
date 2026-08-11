@@ -3,7 +3,7 @@
 A swappable adapter layer fetches real world-signals about AI progress (arXiv papers, news +
 lab-blog RSS, Reddit pulse, and key-gated web-search / X) and writes them into the `signals`
 table. `gather_signals` stays the entry point the ritual calls; live scanning is opt-in via
-`SINGULARITY_LIVE_SCAN` so offline tests remain deterministic.
+`INFINITUM_LIVE_SCAN` so offline tests remain deterministic.
 
 Robustness is load-bearing here: each adapter runs inside its own try/except, so one failing
 source never kills a wake, and a network failure during a live scan falls back to whatever
@@ -51,7 +51,7 @@ def _existing_index(conn) -> set:
 # ---------- optional LLM triage ----------
 
 def _maybe_triage(items: List[SignalItem]) -> None:
-    """Placeholder for haiku-model triage. Enabled only when SINGULARITY_TRIAGE is set AND
+    """Placeholder for haiku-model triage. Enabled only when INFINITUM_TRIAGE is set AND
     ANTHROPIC_API_KEY is present; any failure is swallowed so the pipeline never blocks. The
     heuristic score is always applied regardless, so triage is purely additive when wired."""
     import os

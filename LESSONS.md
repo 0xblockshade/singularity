@@ -1,4 +1,4 @@
-# singularity — Lessons
+# infinitum — Lessons
 
 Project-specific context that doesn't generalise. Written by `/retro`, editable by hand.
 Read this before writing code. If a lesson is wrong, fix the file — don't work around it.
@@ -21,18 +21,18 @@ Read this before writing code. If a lesson is wrong, fix the file — don't work
 ## Stack notes
 - Confirm exact current Claude model IDs against the `claude-api` skill at build time — do not hardcode from
   memory.
-- **Live scanning is opt-in.** `gather_signals` only fetches when `SINGULARITY_LIVE_SCAN` is truthy; otherwise
+- **Live scanning is opt-in.** `gather_signals` only fetches when `INFINITUM_LIVE_SCAN` is truthy; otherwise
   it returns cached unused signals. Keeps tests offline/deterministic and lets a wake degrade to cached signals
   if the network dies. Each adapter runs in its own try/except so one dead source never kills a wake.
-- **Adapters:** `arxiv`, `news`, `reddit` are live with no key. `web` (Tavily via `SINGULARITY_WEBSEARCH_KEY`)
-  and `x` (`SINGULARITY_X_KEY`, ToS-gray) self-skip to `[]` when their key is absent — never crash.
-- **Scheduler is flag-gated.** FastAPI only starts the in-process daily wake when `SINGULARITY_ENABLE_SCHEDULER`
+- **Adapters:** `arxiv`, `news`, `reddit` are live with no key. `web` (Tavily via `INFINITUM_WEBSEARCH_KEY`)
+  and `x` (`INFINITUM_X_KEY`, ToS-gray) self-skip to `[]` when their key is absent — never crash.
+- **Scheduler is flag-gated.** FastAPI only starts the in-process daily wake when `INFINITUM_ENABLE_SCHEDULER`
   is truthy (default OFF). Run standalone with `python -m app.scheduler` (worker) or `--now` (one-shot).
-  `SINGULARITY_FAKE=1` forces the deterministic narrator for wiring tests — no network, no key.
+  `INFINITUM_FAKE=1` forces the deterministic narrator for wiring tests — no network, no key.
 - **`.env.example` must be force-tracked.** The `.env.*` ignore rule silently swallows the template; the repo
   carries `!.env.example` / `!**/.env.example` negations. Don't remove them.
 - **Frontend fixtures are placeholders, marked for deletion** in `frontend/src/lib/fixtures.ts`. The sample
-  narrator ("Kestrel", model `claude-opus-4`) is invented — the model ID there is a stand-in; swap to the real
+  narrator ("Kestrel", model `claude-opus-5`) is invented, the model ID there matches the live default; swap when the real
   one at launch and delete fixtures once the agent has published real dispatches.
 
 ## Build notes (Phases 4–7, 2026-08-09)

@@ -13,7 +13,7 @@
   },
   "_notes": {
     "rootDirectory": "Set the service Root Directory to 'backend' in the Railway dashboard so the build context (and .dockerignore) is backend/. Then dockerfilePath 'Dockerfile' resolves to backend/Dockerfile.",
-    "volume": "Attach a Railway volume mounted at /data (SINGULARITY_DATA) so the SQLite DB survives redeploys.",
-    "env": "Set in the dashboard / `railway variables`: ANTHROPIC_API_KEY, SINGULARITY_ADMIN_TOKEN, SINGULARITY_ENABLE_SCHEDULER=true, SINGULARITY_WAKE_HOUR=9, SINGULARITY_TZ=UTC, SINGULARITY_DATA=/data, SINGULARITY_DB=/data/singularity.db. Never commit secrets."
+    "volume": "Attach a Railway volume mounted at /data (INFINITUM_DATA) so the SQLite DB survives redeploys.",
+    "env": "Set in the dashboard / `railway variables`: ANTHROPIC_API_KEY, INFINITUM_ADMIN_TOKEN, INFINITUM_ENABLE_SCHEDULER=true, INFINITUM_WAKE_HOUR=9, INFINITUM_TZ=UTC, INFINITUM_DATA=/data, INFINITUM_DB=/data/infinitum.db. Never commit secrets."
   }
 }

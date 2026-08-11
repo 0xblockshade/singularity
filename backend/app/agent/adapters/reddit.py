@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 # Editable list of public top-of-day JSON endpoints.
 REDDIT_URLS = [
-    "https://www.reddit.com/r/singularity/top.json?t=day&limit=15",
+    "__REDDIT_INFINITUM_URL__top.json?t=day&limit=15",
     "https://www.reddit.com/r/MachineLearning/top.json?t=day&limit=15",
 ]
 

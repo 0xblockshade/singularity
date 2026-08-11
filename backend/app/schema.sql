@@ -1,4 +1,4 @@
--- singularity data model. See docs/DESIGN.md §4.
+-- Infinitum data model. See docs/DESIGN.md §4.
 -- Dispatches and memory versions are immutable once written — the archive is the artwork.
 
 CREATE TABLE IF NOT EXISTS settings (

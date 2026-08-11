@@ -1,11 +1,11 @@
-# singularity backend — API + in-process daily-wake scheduler.
+# infinitum backend — API + in-process daily-wake scheduler.
 FROM python:3.11-slim
 
 # No .pyc, unbuffered logs (so wake logs stream in Fly/Railway).
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PORT=8000 \
-    SINGULARITY_DATA=/data
+    INFINITUM_DATA=/data
 
 WORKDIR /app
 
@@ -18,10 +18,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app ./app
 
 # Non-root user; own the mountable data dir so SQLite (WAL) can write.
-RUN useradd --create-home --uid 10001 singularity \
+RUN useradd --create-home --uid 10001 infinitum \
     && mkdir -p /data \
-    && chown -R singularity:singularity /app /data
-USER singularity
+    && chown -R infinitum:infinitum /app /data
+USER infinitum
 
 VOLUME ["/data"]
 EXPOSE 8000

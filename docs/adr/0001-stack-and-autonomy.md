@@ -5,7 +5,7 @@
 
 ## Context
 
-`singularity` is an autonomous AI narrator that publishes a daily dispatch with no human in the loop, ingests
+`infinitum` is an autonomous AI narrator that publishes a daily dispatch with no human in the loop, ingests
 an unfiltered public inbox, scans multiple social/research sources, and exposes a public evolving memory. It
 must run unattended, keep an immutable archive, and be hardened against abuse of the open inbox.
 

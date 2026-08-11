@@ -1,6 +1,6 @@
 """Web-search adapter.
 
-Requires an API key (`SINGULARITY_WEBSEARCH_KEY`). Implemented against Tavily's search API
+Requires an API key (`INFINITUM_WEBSEARCH_KEY`). Implemented against Tavily's search API
 by default, but the provider is just this one module — swap it without touching the scanner.
 
 If the key is absent it logs a skip and returns `[]`. It never crashes the scan.
@@ -27,7 +27,7 @@ class WebSearchAdapter:
     def fetch(self) -> List[SignalItem]:
         key = config.WEBSEARCH_KEY
         if not key:
-            log.info("web adapter: no SINGULARITY_WEBSEARCH_KEY set — skipping")
+            log.info("web adapter: no INFINITUM_WEBSEARCH_KEY set — skipping")
             return []
 
         import httpx
