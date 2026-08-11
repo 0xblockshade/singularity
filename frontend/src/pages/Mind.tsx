@@ -86,9 +86,9 @@ export default function Mind() {
 
       {/* Memory timeline */}
       <section className="mt-20" aria-label="Memory timeline">
-        <div className="flex items-baseline gap-3">
+        <div>
           <span className="eyebrow">Memory</span>
-          <h2 className="font-sans text-xl font-semibold tracking-tight text-ink">
+          <h2 className="mt-2 font-sans text-xl font-semibold tracking-tight text-ink">
             The evolving worldview
           </h2>
         </div>
