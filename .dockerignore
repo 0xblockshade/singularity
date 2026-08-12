@@ -1,0 +1,29 @@
+# Build context is the repo root — keep the image slim and secret-free.
+# Docker patterns do not recurse implicitly, hence the **/ prefixes.
+
+# python
+**/.venv/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+backend/data/
+**/*.db
+**/*.db-wal
+**/*.db-shm
+
+# node — node_modules is reinstalled inside the build stage via `npm ci`,
+# and a host-built dist must never shadow the one built in-image.
+**/node_modules/
+frontend/dist/
+
+# secrets — never in an image layer
+**/.env
+**/.env.*
+
+# repo cruft
+.git/
+.github/
+docs/
+**/*.md
+**/.DS_Store
+railway.json

@@ -8,8 +8,10 @@ import json
 import logging
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from . import config, db, repo
@@ -178,3 +180,42 @@ def _require_admin(x_admin_token: str = Header(default="")):
 def kill(on: bool = True, conn=Depends(get_conn)):
     repo.set_kill_switch(conn, on)
     return {"kill_switch": on}
+
+
+# --- frontend --------------------------------------------------------------
+#
+# Registered LAST so it can never shadow an /api route.
+#
+# Deliberately a catch-all rather than `StaticFiles(html=True)` mounted at "/":
+# that mount only falls back to index.html for *directory* paths, so a client-side
+# route like /dispatch/42 returns 404 in production while working fine in dev.
+#
+# In dev this is absent (the frontend runs on :5280 behind Vite's proxy), so a missing
+# dist/ is normal rather than an error.
+
+_FRONTEND_DIST = Path(
+    os.environ.get(
+        "INFINITUM_FRONTEND_DIST",
+        os.path.join(os.path.dirname(config.BACKEND_DIR), "frontend", "dist"),
+    )
+).resolve()
+
+
+def _mount_frontend() -> None:
+    index = _FRONTEND_DIST / "index.html"
+    if not index.is_file():
+        log.info("no frontend build at %s - serving the API only", _FRONTEND_DIST)
+        return
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def spa(full_path: str):
+        if full_path:
+            candidate = (_FRONTEND_DIST / full_path).resolve()
+            if candidate.is_relative_to(_FRONTEND_DIST) and candidate.is_file():
+                return FileResponse(candidate)
+        return FileResponse(index)
+
+    log.info("serving the frontend from %s", _FRONTEND_DIST)
+
+
+_mount_frontend()

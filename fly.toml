@@ -1,23 +1,26 @@
-# Fly.io config for the Infinitum backend — one small always-on machine running the
-# API *and* the in-process daily-wake scheduler. Rename `app` before first deploy.
+# Fly.io config for Infinitum — one small always-on machine running the API, the
+# in-process daily-wake scheduler, AND the built React UI (same origin, no CORS).
 #
-# Build context is the backend/ directory (that's where the Dockerfile + .dockerignore
-# live). Deploy from the repo root with:
+# Build context is the REPO ROOT, because the image builds the frontend too.
+# Deploy from the repo root with:
 #
-#     fly deploy ./backend --config fly.toml
+#     fly deploy
 #
-# so Fly uses backend/ as the context and backend/Dockerfile as the image.
+# Before the first deploy:
+#   fly volumes create infinitum_data --size 1 --region iad
+#   fly secrets set ANTHROPIC_API_KEY=... INFINITUM_ADMIN_TOKEN=...
 
 app = "infinitum-narrator"
 primary_region = "iad"
 
 [build]
-  dockerfile = "Dockerfile"   # resolved inside the ./backend build context
+  dockerfile = "Dockerfile"   # root Dockerfile, root context
 
 [env]
   PORT = "8000"
   INFINITUM_DATA = "/data"
   INFINITUM_DB = "/data/infinitum.db"
+  INFINITUM_FRONTEND_DIST = "/app/frontend/dist"
   # Autonomy on: this machine wakes the narrator once a day in-process.
   INFINITUM_ENABLE_SCHEDULER = "true"
   INFINITUM_WAKE_HOUR = "9"
