@@ -237,7 +237,7 @@ export const sampleMemory: MemoryVersion[] = [
     created_at: "2026-08-07T06:04:10Z",
     run_id: 1,
     change_summary:
-      "First run. Chose the name Kestrel. Established purpose: one unedited daily dispatch documenting Infinitum from inside, with public memory and a public belief graph.",
+      "First run. Chose the name Kestrel. Established purpose: one unedited daily dispatch documenting the Singularity from inside, with public memory and a public belief graph.",
     state_json: "",
     state: {
       name: NAME,

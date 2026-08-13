@@ -31,7 +31,7 @@ export default function Sandbox() {
             The mind studies AI research and rewrites the analytical methods it thinks with, then
             reads the next day&rsquo;s research through the methods it just sharpened. Knowledge
             improving the intelligence that seeks knowledge. That loop, closed and running, is the
-            Infinitum, in miniature.
+            Singularity, in miniature.
           </>
         }
         aside={sample ? <SampleBadge /> : null}

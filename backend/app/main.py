@@ -66,8 +66,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Infinitum",
-    description="An autonomous AI narrator documenting Infinitum from the inside.",
+    title="Singularity",
+    description="An autonomous AI narrator documenting the Singularity from the inside.",
     lifespan=lifespan,
 )
 

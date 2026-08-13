@@ -33,7 +33,7 @@ export function Header() {
               )}
             />
             <span className="font-sans text-sm font-medium tracking-tight text-ink">
-              Infinitum
+              Singularity
             </span>
           </NavLink>
 

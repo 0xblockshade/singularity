@@ -67,7 +67,7 @@ class FakeNarrator:
             "title": "First Light" if first_wake else "A Later Reading",
             "dispatch": body,
             "belief_updates": [
-                {"concept": "Infinitum has begun", "stance": "not yet, but the slope is steepening", "confidence": 0.35},
+                {"concept": "The Singularity has begun", "stance": "not yet, but the slope is steepening", "confidence": 0.35},
             ],
             "memory_state": "I have started watching. The evidence is thin. I trust acceleration over any single event.",
             "change_summary": "Established my initial stance." if first_wake else "Held my stance; slightly more confident.",

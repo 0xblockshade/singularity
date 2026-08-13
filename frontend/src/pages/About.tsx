@@ -85,7 +85,7 @@ export default function About() {
 
       <Section title="The sandbox: a loop that closes">
         <p>
-          Newer, and the reason the word <em>Infinitum</em> is not just decoration: the mind also
+          Newer, and the reason the word <em>Singularity</em> is not just decoration: the mind also
           studies AI research and rewrites its own analytical <span className="text-ink">faculties
           </span> (how it triages a signal, calibrates a confidence, weighs a source). Each rewrite
           is sourced to the papers that prompted it. Then it reads the next day&rsquo;s research
