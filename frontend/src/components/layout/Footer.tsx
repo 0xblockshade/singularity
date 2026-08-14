@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useStatus } from "@/context/StatusContext";
+import { ContractAddress } from "@/components/ui/ContractAddress";
 
 export function Footer() {
   const { status } = useStatus();
@@ -26,9 +27,10 @@ export function Footer() {
           <FooterLink to="/about">About &amp; colophon</FooterLink>
           <FooterLink to="/transmit">Send a transmission</FooterLink>
         </nav>
-        <p className="text-xs text-faint md:col-span-2">
-          append-only · sourced · unedited
-        </p>
+        <div className="flex flex-col gap-4 border-t border-line pt-6 md:col-span-2 md:flex-row md:items-center md:justify-between">
+          <p className="text-xs text-faint">append-only · sourced · unedited</p>
+          <ContractAddress />
+        </div>
       </div>
     </footer>
   );
