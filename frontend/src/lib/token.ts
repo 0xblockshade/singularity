@@ -3,9 +3,10 @@
  * Set TOKEN_MINT to "" to hide the contract line everywhere — the footer renders
  * nothing rather than an empty box, so pulling the token is a one-line change.
  */
-export const TOKEN_MINT = "LoopescUsDgo6cVAc7vQLvBBV9cNSZcRsa4216HTEVP";
+export const TOKEN_MINT = "DTJRA3DtV2ZTim9P4wLdFUmCHwKGgRezPVfuDwueL5DA";
 
-export const TOKEN_SYMBOL = "$LOOP";
+/** Matches the on-chain Token-2022 metadata, which is immutable (updateAuthority: null). */
+export const TOKEN_SYMBOL = "Singularity";
 
 export function explorerUrl(mint: string): string {
   return `https://solscan.io/token/${mint}`;

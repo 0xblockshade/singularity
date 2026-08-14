@@ -30,7 +30,8 @@ export function ContractAddress() {
 
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs">
-      <span className="font-medium text-muted">{TOKEN_SYMBOL} contract</span>
+      {/* The token shares the record's name, so "Singularity contract" would stutter. */}
+      <span className="font-medium text-muted">Contract</span>
 
       <button
         type="button"
